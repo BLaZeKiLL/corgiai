@@ -1,0 +1,16 @@
+services:
+  py-loader:
+    build:
+      context: ./apps/py-loader
+    networks:
+      - corgi-net
+    ports:
+      - 8100:8100
+    develop:
+      watch:
+        - action: rebuild
+          path: ./apps/py-loader
+      
+
+networks:
+  corgi-net:
