@@ -6,7 +6,12 @@ services:
       - corgi-net
     ports:
       - 8100:8100
-    develop:
+    volumes:
+      - ./data/embedding_model:/embedding_model
+    depends_on:
+      neo:
+        condition: service_healthy
+    x-develop: # x here is important for some reason
       watch:
         - action: rebuild
           path: ./apps/py-loader
@@ -17,7 +22,7 @@ services:
       - 7687:7687
       - 7474:7474
     volumes:
-      - ./data:/data
+      - ./data/neo:/data
     environment:
       - NEO4J_AUTH=neo4j/password
       - NEO4J_PLUGINS=["apoc"]
