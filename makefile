@@ -9,3 +9,6 @@ log:
 
 stats:
 	sudo docker compose ps
+
+down:
+	sudo docker compose down

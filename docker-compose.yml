@@ -20,6 +20,28 @@ services:
       watch:
         - action: rebuild
           path: ./apps/py-loader
+
+  py-chat:
+    image: corgiai/py-chat:latest
+    build:
+      context: ./apps/py-chat
+      additional_contexts:
+        config: ./config
+    networks:
+      - corgi-net
+    ports:
+      - 8200:8200
+    volumes:
+      - ./data/embedding_model:/embedding_model
+    depends_on:
+      pull-model:
+        condition: service_completed_successfully
+      neo:
+        condition: service_healthy
+    x-develop: # x here is important for some reason
+      watch:
+        - action: rebuild
+          path: ./apps/py-chat
       
   pull-model:
     image: corgiai/pull-model:latest

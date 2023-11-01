@@ -4,6 +4,21 @@
 
 The app will be hosteed on codeblaze-server which should be accisible using tailscale
 
+## Neo4j Queries
+
+- ### Delete All
+    ```sql
+    MATCH (node) DETACH DELETE node
+    ```
+
+- ### View All
+    ```sql
+    MATCH (node) RETURN node
+    ```
+    - Filtering can be done using (node:LABEL)
+    - Multiple nodes can be returned using multiple match
+    - specific properties can be returned from the node using RETURN node.property
+
 ## Dev Setup
 
 - ### Env setup

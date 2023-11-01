@@ -1,12 +1,9 @@
-from typing import List, Dict, Union
-
 import time
 import os
 import requests
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
-from pydantic import BaseModel
 
 from neo import (
     connect_neo_graph,
@@ -40,7 +37,7 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"Hello": "Corgi"}
+    return {"Hello": "Corgi Py Loader"}
 
 
 @app.post("/import/{site}/")
@@ -49,8 +46,9 @@ def import_data(config: ImportConfig, site: str, count: int = 100, page: int = 1
 
     tags = ';'.join(config.tags)
 
+    # filter is generated using - https://api.stackexchange.com/docs/filters
     parameters = (
-        f"?pagesize=100&page={page}&order=desc&sort=creation&answers=1&tagged={tags}"
+        f"?pagesize=100&page={page}&order=desc&sort=votes&answers=1&accepted=True&tagged={tags}"
         f"&site={site}&filter=!*236eb_eL9rai)MOSNZ-6D3Q6ZKb0buI*IVotWaTb"
     )
 
