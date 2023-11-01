@@ -13,6 +13,7 @@ COPY requirements.txt .
 RUN pip install --upgrade -r requirements.txt
 
 COPY src/ .
+COPY --from=root .env .
 
 ARG PORT=8100
 ENV PORT=${PORT}

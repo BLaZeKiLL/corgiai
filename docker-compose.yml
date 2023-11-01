@@ -1,7 +1,10 @@
 services:
   py-loader:
+    image: corgiai/py-loader:latest
     build:
       context: ./apps/py-loader
+      additional_contexts:
+        root: .
     networks:
       - corgi-net
     ports:
@@ -9,6 +12,8 @@ services:
     volumes:
       - ./data/embedding_model:/embedding_model
     depends_on:
+      pull-model:
+        condition: service_completed_successfully
       neo:
         condition: service_healthy
     x-develop: # x here is important for some reason
@@ -16,6 +21,16 @@ services:
         - action: rebuild
           path: ./apps/py-loader
       
+  pull-model:
+    image: corgiai/pull-model:latest
+    build:
+      dockerfile: pull_model.Dockerfile
+    environment:
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL-http://host.docker.internal:11434}
+      - LLM=${LLM-llama2}
+    networks:
+      - corgi-net
+
   neo:
     image: neo4j:5.11
     ports:
@@ -34,6 +49,23 @@ services:
         retries: 5
     networks:
       - corgi-net
+  
+  llm:
+    image: ollama/ollama:latest
+    profiles: ["linux"]
+    volumes:
+      - ./data/ollama:/root/.ollama
+    ports:
+      - 11434:11434
+    networks:
+      - corgi-net
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1 
+              capabilities: [ gpu ]
 
 networks:
   corgi-net:
