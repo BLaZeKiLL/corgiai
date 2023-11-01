@@ -7,7 +7,14 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-from langchain.graphs import Neo4jGraph
+from neo import (
+    connect_neo_graph,
+    create_constraints,
+    insert_data
+)
+from dtos import ImportConfig
+from chains import load_embeddings
+
 
 SE_BASE_URL = 'https://api.stackexchange.com/2.3/search/advanced'
 
@@ -22,14 +29,13 @@ embedding_model_name = os.getenv("EMBEDDING_MODEL")
 # Remapping for Langchain Neo4j integration
 os.environ["NEO4J_URL"] = url
 
-neo4j_graph = Neo4jGraph(url=url, username=username, password=password)
+neo_graph = connect_neo_graph(url, username, password)
+
+embeddings, dimension = load_embeddings(ollama_base_url, embedding_model_name)
+
+create_constraints(neo_graph)
 
 app = FastAPI()
-
-
-class ImportConfig(BaseModel):
-    tags: List[str]
-
 
 @app.get("/")
 def read_root():
@@ -48,10 +54,24 @@ def import_data(config: ImportConfig, site: str, count: int = 100, page: int = 1
     print(f'Importing data from : {site}')
 
     data = requests.get(SE_BASE_URL + parameters).json()
+    data['site'] = site
+    data['count'] = count
+    data['page'] = page
+
+    try:
+        insert_data(data, embeddings, neo_graph)
+    except:
+        return {
+            "status": "failed",
+            "description": "insert data failed",
+            "site": site,
+            "count": len(data["items"]),
+            "page": page
+        }
 
     return {
-        "site": site, 
-        "count": count,
-        "page": page,
-        "data": data
+        "status": "sucess",
+        "site": site,
+        "count": len(data["items"]),
+        "page": page
     }

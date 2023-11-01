@@ -7,7 +7,7 @@ The app will be hosteed on codeblaze-server which should be accisible using tail
 ## Dev Setup
 
 - ### Env setup
-    - Default .env file
+    - Default .env file, place it in the config folder
     ```cmd
     OLLAMA_BASE_URL=http://llm:11434
     NEO4J_URI=neo4j://neo:7687

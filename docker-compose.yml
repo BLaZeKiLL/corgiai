@@ -4,7 +4,7 @@ services:
     build:
       context: ./apps/py-loader
       additional_contexts:
-        root: .
+        config: ./config
     networks:
       - corgi-net
     ports:
@@ -32,7 +32,7 @@ services:
       - corgi-net
 
   neo:
-    image: neo4j:5.11
+    image: neo4j:5.13
     ports:
       - 7687:7687
       - 7474:7474
