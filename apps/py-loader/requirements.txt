@@ -2,3 +2,4 @@ neo4j
 fastapi
 uvicorn
 python-dotenv
+sentence_transformers

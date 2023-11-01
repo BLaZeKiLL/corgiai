@@ -1,5 +1,6 @@
 from typing import List, Dict, Union
 
+import time
 import os
 import requests
 
@@ -44,6 +45,8 @@ def read_root():
 
 @app.post("/import/{site}/")
 def import_data(config: ImportConfig, site: str, count: int = 100, page: int = 1):
+    start_time = time.time()
+
     tags = ';'.join(config.tags)
 
     parameters = (
@@ -73,5 +76,6 @@ def import_data(config: ImportConfig, site: str, count: int = 100, page: int = 1
         "status": "sucess",
         "site": site,
         "count": len(data["items"]),
-        "page": page
+        "page": page,
+        "duration": time.time() - start_time
     }
