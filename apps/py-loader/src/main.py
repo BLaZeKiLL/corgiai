@@ -59,22 +59,26 @@ def import_data(config: ImportConfig, site: str, size: int = 100, page: int = 1,
             f"&site={site}&filter=!*236eb_eL9rai)MOSNZ-6D3Q6ZKb0buI*IVotWaTb"
         )
 
-        items += requests.get(SE_BASE_URL + parameters).json()["items"]
+        response = requests.get(SE_BASE_URL + parameters).json()
+
+        if "items" in response:
+            items += response["items"]
 
     data = {
         "site": site,
         "items": items
     }
 
-    try:
-        insert_data(data, embeddings, neo_graph)
-    except:
-        return {
-            "status": "failed",
-            "description": "insert data failed",
-            "site": site,
-            "size": len(data["items"]),
-        }
+    if len(data["items"]) > 0:
+        try:
+            insert_data(data, embeddings, neo_graph)
+        except:
+            return {
+                "status": "failed",
+                "description": "insert data failed",
+                "site": site,
+                "size": len(data["items"]),
+            }
 
     return {
         "status": "sucess",

@@ -40,7 +40,7 @@ def load_llm(model: str, config: dict) -> BaseChatModel:
             temperature=0,
             base_url=config["ollama_base_url"],
             model=model,
-            streaming=True,
+            # streaming=True,
             # seed=2,
             top_k=10,  # A higher value (100) will give more diverse answers, while a lower value (10) will be more conservative.
             top_p=0.3,  # Higher value (0.95) will lead to more diverse text, while a lower value (0.5) will generate more focused text.
@@ -51,20 +51,20 @@ def load_llm(model: str, config: dict) -> BaseChatModel:
 def configure_llm_chain_factory(llm: BaseChatModel, embeddings: Embeddings, graph_url: str, graph_username: str, graph_password: str):
     general_system_template = """ 
     Use the following pieces of context to answer the question at the end.
-    The context contains question-answer pairs and their links from Stackoverflow.
+    The context contains question-answer pairs and their hyperlinks to a StackExchange forum post.
     You should prefer information from accepted or more upvoted answers.
-    Make sure to rely on information from the answers and not on questions to provide accuate responses.
+    Make sure to rely on information from the answers and not on questions to provide accurate responses.
     When you find particular answer in the context useful, make sure to cite it in the answer using the link.
     If you don't know the answer, just say that you don't know, don't try to make up an answer.
     ----
     {summaries}
     ----
-    Each answer you generate should contain a section at the end of links to 
-    Stackoverflow questions and answers you found useful, which are described under Source value.
-    You can only use links to StackOverflow questions that are present in the context and always
-    add links to the end of the answer in the style of citations.
-    Generate concise answers with references sources section of links to 
-    relevant StackOverflow questions only at the end of the answer.
+    Each answer you generate should contain a section at the end of hyperlinks to 
+    a StackExchange forum questions and answers you found useful, which are described under source value in metadata.
+    You can only use hyperlinks that are present in the context, dont try to make up hyperlinks. 
+    always add hyperlinks to the end of the answer in the style of citations.
+    Generate concise answers with references sources section of hyperlinks to 
+    relevant a StackExchange forum questions only at the end of the answer.
     """
 
     general_user_template = "Question:```{question}```"
