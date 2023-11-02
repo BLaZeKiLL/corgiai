@@ -19,6 +19,6 @@ def load_embeddings(model: str, config: dict) -> tuple[Embeddings, int]:
             model_name="all-MiniLM-L6-v2",
             cache_folder="/embedding_model"
         )
-        dimensions = 382
+        dimensions = 384
 
     return embeddings, dimensions

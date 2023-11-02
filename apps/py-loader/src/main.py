@@ -8,6 +8,7 @@ from fastapi import FastAPI
 from neo import (
     connect_neo_graph,
     create_constraints,
+    create_vector_index,
     insert_data
 )
 from dtos import ImportConfig
@@ -32,6 +33,7 @@ neo_graph = connect_neo_graph(url, username, password)
 embeddings, dimension = load_embeddings(ollama_base_url, embedding_model_name)
 
 create_constraints(neo_graph)
+create_vector_index(neo_graph, dimension)
 
 app = FastAPI()
 

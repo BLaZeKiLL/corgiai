@@ -5,6 +5,20 @@ from langchain.schema.embeddings import Embeddings
 def connect_neo_graph(url: str, username: str, password: str) -> Neo4jGraph:
     return Neo4jGraph(url=url, username=username, password=password)
 
+
+def create_vector_index(driver: Neo4jGraph, dimension: int) -> None:
+    index_query = "CALL db.index.vector.createNodeIndex('top_questions', 'Question', 'embedding', $dimension, 'cosine')"
+    try:
+        driver.query(index_query, {"dimension": dimension})
+    except:  # Already exists
+        pass
+    index_query = "CALL db.index.vector.createNodeIndex('top_answers', 'Answer', 'embedding', $dimension, 'cosine')"
+    try:
+        driver.query(index_query, {"dimension": dimension})
+    except:  # Already exists
+        pass
+
+
 def create_constraints(driver: Neo4jGraph) -> None:
     driver.query(
         "CREATE CONSTRAINT question_id IF NOT EXISTS FOR (q:Question) REQUIRE (q.id) IS UNIQUE"
@@ -22,9 +36,6 @@ def create_constraints(driver: Neo4jGraph) -> None:
         "CREATE CONSTRAINT site_name IF NOT EXISTS FOR (s:Site) REQUIRE (s.name) IS UNIQUE"
     )
 
-# TODO : Look at - https://github.com/docker/genai-stack/blob/main/utils.py
-def create_vector_indexes():
-    pass
 
 def insert_data(data: dict, embeddings: Embeddings, driver: Neo4jGraph) -> None:
 
