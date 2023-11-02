@@ -43,23 +43,28 @@ def read_root():
 
 
 @app.post("/import/{site}/")
-def import_data(config: ImportConfig, site: str, count: int = 100, page: int = 1):
+def import_data(config: ImportConfig, site: str, size: int = 100, page: int = 1, pages: int = 10):
     start_time = time.time()
 
     tags = ';'.join(config.tags)
 
-    # filter is generated using - https://api.stackexchange.com/docs/filters
-    parameters = (
-        f"?pagesize=100&page={page}&order=desc&sort=votes&answers=1&accepted=True&tagged={tags}"
-        f"&site={site}&filter=!*236eb_eL9rai)MOSNZ-6D3Q6ZKb0buI*IVotWaTb"
-    )
-
     print(f'Importing data from : {site}')
 
-    data = requests.get(SE_BASE_URL + parameters).json()
-    data['site'] = site
-    data['count'] = count
-    data['page'] = page
+    items = []
+
+    for i in range(page, page + pages):
+        # filter is generated using - https://api.stackexchange.com/docs/filters
+        parameters = (
+            f"?pagesize={size}&page={i}&order=desc&sort=votes&answers=1&accepted=True&tagged={tags}"
+            f"&site={site}&filter=!*236eb_eL9rai)MOSNZ-6D3Q6ZKb0buI*IVotWaTb"
+        )
+
+        items += requests.get(SE_BASE_URL + parameters).json()["items"]
+
+    data = {
+        "site": site,
+        "items": items
+    }
 
     try:
         insert_data(data, embeddings, neo_graph)
@@ -68,14 +73,12 @@ def import_data(config: ImportConfig, site: str, count: int = 100, page: int = 1
             "status": "failed",
             "description": "insert data failed",
             "site": site,
-            "count": len(data["items"]),
-            "page": page
+            "size": len(data["items"]),
         }
 
     return {
         "status": "sucess",
         "site": site,
-        "count": len(data["items"]),
-        "page": page,
+        "size": len(data["items"]),
         "duration": time.time() - start_time
     }
