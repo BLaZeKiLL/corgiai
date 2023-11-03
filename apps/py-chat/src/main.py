@@ -70,6 +70,7 @@ def question_query(question: Question):
 
     return {
         "status": "sucess",
+        "model": llm_name,
         "chain_duration": end_time - chain_time,
         "duration": end_time - start_time,
         "text": result["answer"]

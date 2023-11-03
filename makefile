@@ -7,6 +7,9 @@ rund:
 run:
 	sudo docker compose --profile linux --env-file ./config/.env up --build
 
+clean:
+	sudo docker compose --profile linux --env-file ./config/.env up --build --remove-orphans --force-recreate
+
 log:
 	sudo docker compose logs -f
 

@@ -1,4 +1,40 @@
 services:
+  llm:
+    image: ollama/ollama:latest
+    profiles: ["linux"]
+    volumes:
+      - ./data/ollama:/root/.ollama
+    ports:
+      - 11434:11434
+    networks:
+      - corgi-net
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1 
+              capabilities: [ gpu ]
+
+  neo:
+    image: neo4j:5.13
+    ports:
+      - 7687:7687
+      - 7474:7474
+    volumes:
+      - ./data/neo:/data
+    environment:
+      - NEO4J_AUTH=${NEO4J_USERNAME-neo4j}/${NEO4J_PASSWORD-password}
+      - NEO4J_PLUGINS=["apoc"]
+      - NEO4J_db_tx__log_rotation_retention__policy=false
+    healthcheck:
+        test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider localhost:7474 || exit 1"]
+        interval: 5s
+        timeout: 3s
+        retries: 5
+    networks:
+      - corgi-net
+
   py-loader:
     image: corgiai/py-loader:latest
     build:
@@ -42,7 +78,7 @@ services:
       watch:
         - action: rebuild
           path: ./apps/py-chat
-      
+  
   pull-model:
     image: corgiai/pull-model:latest
     build:
@@ -52,42 +88,6 @@ services:
       - LLM=${LLM-llama2}
     networks:
       - corgi-net
-
-  neo:
-    image: neo4j:5.13
-    ports:
-      - 7687:7687
-      - 7474:7474
-    volumes:
-      - ./data/neo:/data
-    environment:
-      - NEO4J_AUTH=${NEO4J_USERNAME-neo4j}/${NEO4J_PASSWORD-password}
-      - NEO4J_PLUGINS=["apoc"]
-      - NEO4J_db_tx__log_rotation_retention__policy=false
-    healthcheck:
-        test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider localhost:7474 || exit 1"]
-        interval: 5s
-        timeout: 3s
-        retries: 5
-    networks:
-      - corgi-net
-  
-  llm:
-    image: ollama/ollama:latest
-    profiles: ["linux"]
-    volumes:
-      - ./data/ollama:/root/.ollama
-    ports:
-      - 11434:11434
-    networks:
-      - corgi-net
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1 
-              capabilities: [ gpu ]
 
 networks:
   corgi-net:
