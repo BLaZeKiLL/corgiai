@@ -88,6 +88,19 @@ services:
       - LLM=${LLM-llama2}
     networks:
       - corgi-net
+  
+  corgiai-spa:
+    image: corgiai/spa:latest
+    build:
+      context: ./apps/corgiai-spa
+    networks:
+      - corgi-net
+    ports:
+      - 8080:80
+    x-develop: # x here is important for some reason
+      watch:
+        - action: rebuild
+          path: ./apps/corgiai-spa
 
 networks:
   corgi-net:

@@ -1,6 +1,9 @@
 req:
 	pipreqs ./apps/py-loader ;\
 
+spa:
+	cd apps/corgiai-spa && yarn dev
+
 rund:
 	sudo docker compose --profile linux --env-file ./config/.env up --build -d
 
