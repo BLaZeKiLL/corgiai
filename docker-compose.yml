@@ -89,7 +89,7 @@ services:
     networks:
       - corgi-net
   
-  corgiai-spa:
+  spa:
     image: corgiai/spa:latest
     build:
       context: ./apps/corgiai-spa
