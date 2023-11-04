@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.4.2",
+    "@tailwindcss/forms": "^0.5.6",
     "@tsconfig/svelte": "^5.0.0",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.31",
@@ -20,5 +21,8 @@
     "tslib": "^2.6.0",
     "typescript": "^5.0.2",
     "vite": "^4.4.5"
+  },
+  "dependencies": {
+    "lucide-svelte": "^0.292.0"
   }
 }
