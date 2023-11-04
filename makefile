@@ -17,7 +17,7 @@ log:
 	sudo docker compose logs -f
 
 stats:
-	sudo docker compose ps
+	sudo docker stats
 
 down:
 	sudo docker compose down

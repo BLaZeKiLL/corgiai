@@ -1,6 +1,8 @@
 <script lang="ts">
-  import Chat from './lib/Chat.svelte';
-import Title from './lib/Title.svelte';
+  import { fade } from 'svelte/transition';
+
+  import Chat from './lib/components/Chat.svelte';
+  import Title from './lib/components/Title.svelte';
 
   let chat_start = false;
   let chat_ready = false;
@@ -13,11 +15,12 @@ import Title from './lib/Title.svelte';
 </script>
 
 <main class="flex w-screen flex-col place-content-center items-center gap-y-4">
-  <span class="grow mt-16">
-    {#if !chat_start}
-      <Title on:transitionend={() => chat_ready = true}/>
-    {/if}
-  </span>
+  
+  {#if !chat_start}
+    <span transition:fade on:outroend={() => chat_ready = true} class="grow mt-16">
+      <Title/>
+    </span>
+  {/if}
 
   <Chat on:keyup={hide} ready={chat_ready}/>
 

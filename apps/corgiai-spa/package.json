@@ -23,6 +23,7 @@
     "vite": "^4.4.5"
   },
   "dependencies": {
-    "lucide-svelte": "^0.292.0"
+    "lucide-svelte": "^0.292.0",
+    "svelte-markdown": "^0.4.0"
   }
 }

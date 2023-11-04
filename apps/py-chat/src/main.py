@@ -4,6 +4,7 @@ import requests
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from dtos import (
     Question
@@ -47,6 +48,15 @@ get_chain = configure_llm_chain_factory(llm, embeddings, url, username, password
 
 app = FastAPI()
 
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def read_root():
