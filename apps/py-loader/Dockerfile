@@ -25,4 +25,4 @@ EXPOSE ${PORT}
 
 HEALTHCHECK CMD curl --fail http://localhost:${PORT}
 
-ENTRYPOINT uvicorn main:app --host ${HOST} --port ${PORT}
+ENTRYPOINT streamlit run main.py --server.address ${HOST} --server.port ${PORT}

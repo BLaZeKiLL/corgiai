@@ -1,5 +1,6 @@
 neo4j
 fastapi
 uvicorn
+streamlit
 python-dotenv
 sentence_transformers

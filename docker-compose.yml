@@ -44,6 +44,7 @@ services:
     networks:
       - corgi-net
     ports:
+      - 8081:8080
       - 8100:8100
     volumes:
       - ./data/embedding_model:/embedding_model

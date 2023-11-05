@@ -4,11 +4,8 @@
   export let text = '';
 </script>
 
-<a target="_blank" rel="noreferrer" {href} {title} class="to-blue-500">{text}</a
->
+<a target="_blank" rel="noreferrer" {href} {title} class="text-blue-500">{text}</a>
 
 <style>
-  a {
-    text-decoration: none;
-  }
+
 </style>
