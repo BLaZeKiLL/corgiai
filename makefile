@@ -4,10 +4,10 @@ req:
 spa:
 	cd apps/corgiai-spa && yarn dev
 
-rund:
+rund: tailscale
 	sudo docker compose --profile linux --env-file ./config/.env up --build -d
 
-run:
+run: tailscale
 	sudo docker compose --profile linux --env-file ./config/.env up --build
 
 clean:
@@ -21,3 +21,6 @@ stats:
 
 down:
 	sudo docker compose down
+
+tailscale:
+	cd apps/corgiai-spa && node tailscale.env.js

@@ -9,9 +9,13 @@ RUN yarn install
 
 COPY . .
 
-RUN NODE_ENV=production yarn build
+ARG MODE=production
+
+RUN if [ "$MODE" = "production" ]; \
+    then NODE_ENV=production yarn build; \
+    else yarn build:tailscale; \
+    fi
 
 FROM nginx
 
 COPY --from=build /app/dist /usr/share/nginx/html
-COPY --from=build /app/nginx.conf /etc/nginx/nginx.conf

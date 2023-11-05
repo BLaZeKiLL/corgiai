@@ -93,6 +93,8 @@ services:
     image: corgiai/spa:latest
     build:
       context: ./apps/corgiai-spa
+      args:
+        - MODE=tailscale
     networks:
       - corgi-net
     ports:

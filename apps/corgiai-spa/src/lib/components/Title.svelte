@@ -8,7 +8,7 @@
   const mode = import.meta.env.MODE;
 </script>
 
-<div class="flex flex-row place-content-center items-center gap-x-48">
+<div class="flex flex-row place-content-center items-center gap-x-32">
   <img src={ollamaLogo} class="w-36 logo ollama" alt="Ollama Logo" />
   <img src={dockerLogo} class="w-36 logo docker" alt="Docker Logo" />
   <img src={corgiaiLogo} class="w-64 logo corgi" alt="Corgi AI Logo" />
