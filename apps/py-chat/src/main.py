@@ -19,7 +19,7 @@ from neo import (
 from chains import (
     load_embeddings,
     load_llm,
-    configure_llm_chain_factory
+    configure_qa_llm_chain_factory
 )
 
 load_dotenv(".env")
@@ -44,7 +44,7 @@ create_vector_index(neo_graph, dimension)
 
 llm = load_llm(llm_name, config={"ollama_base_url": ollama_base_url})
 
-get_chain = configure_llm_chain_factory(llm, embeddings, url, username, password)
+get_chain = configure_qa_llm_chain_factory(llm, embeddings, url, username, password)
 
 
 app = FastAPI()

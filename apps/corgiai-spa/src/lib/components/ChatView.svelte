@@ -11,7 +11,6 @@
 
     MathJax.typeset(); // check only div
   }
-
 </script>
 
 <div class="grow mt-0 w-11/12 sm:w-8/12 lg:w-7/12 xl:w-6/12 flex flex-col gap-4 text-start overflow-y-auto">
@@ -34,9 +33,4 @@
 </div>
 
 <style>
-  /* Markdown Overides */
-  /* ol {
-    padding: 1em;
-    list-style: decimal;
-  } */
 </style>

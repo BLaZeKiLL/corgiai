@@ -48,7 +48,8 @@ def load_llm(model: str, config: dict) -> BaseChatModel:
         )
 
 
-def configure_llm_chain_factory(llm: BaseChatModel, embeddings: Embeddings, graph_url: str, graph_username: str, graph_password: str):
+# RAG (Vector Index)
+def configure_qa_llm_chain_factory(llm: BaseChatModel, embeddings: Embeddings, graph_url: str, graph_username: str, graph_password: str):
     # document variable name in load stuff chain is 'summaries'
     general_system_template = """ 
     Use the following pieces of context to answer the question at the end.
@@ -134,3 +135,8 @@ def configure_llm_chain_factory(llm: BaseChatModel, embeddings: Embeddings, grap
         return cache[site]
     
     return cacher
+
+
+#Basic Prompt
+def configure_quiz_llm_chain():
+    pass

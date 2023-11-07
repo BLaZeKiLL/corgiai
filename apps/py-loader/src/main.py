@@ -39,21 +39,20 @@ create_vector_index(neo_graph, dimension)
 
 # app = FastAPI()
 
-
 # @app.post("/import/{site}/")
-def import_data(config: ImportConfig, site: str, size: int = 100, page: int = 1, pages: int = 10):
+def import_data(config: ImportConfig, site: str, page: int = 1, pages: int = 10):
     start_time = time.time()
 
     tags = ';'.join(config.tags)
 
-    print(f'Importing data from : {site}')
+    bar = st.progress(0, text=f"Fetching data from {site}")
 
     items = []
 
-    for i in range(page, page + pages):
+    for i in range(0, pages):
         # filter is generated using - https://api.stackexchange.com/docs/filters
         parameters = (
-            f"?pagesize={size}&page={i}&order=desc&sort=votes&answers=1&accepted=True&tagged={tags}"
+            f"?pagesize=100&page={page + i}&order=desc&sort=votes&answers=1&accepted=True&tagged={tags}"
             f"&site={site}&filter=!*236eb_eL9rai)MOSNZ-6D3Q6ZKb0buI*IVotWaTb"
         )
 
@@ -61,6 +60,12 @@ def import_data(config: ImportConfig, site: str, size: int = 100, page: int = 1,
 
         if "items" in response:
             items += response["items"]
+            bar.progress((i + 1) / pages, f'Fetching page : {page + i} from {site}, Got {len(response["items"])} Questions.')
+        else:
+            st.write(response)
+            bar.progress((i + 1) / pages, f'Fetching page : {page + i} from {site}, Got Nothing.')
+            
+        time.sleep(5) # to avoid stack exchange rate limit
 
     data = {
         "site": site,
@@ -69,7 +74,7 @@ def import_data(config: ImportConfig, site: str, size: int = 100, page: int = 1,
 
     if len(data["items"]) > 0:
         try:
-            insert_data(data, embeddings, neo_graph)
+            result = insert_data(data, embeddings, neo_graph)
         except:
             return {
                 "status": "failed",
@@ -82,7 +87,8 @@ def import_data(config: ImportConfig, site: str, size: int = 100, page: int = 1,
         "status": "sucess",
         "site": site,
         "size": len(data["items"]),
-        "duration": time.time() - start_time
+        "duration": time.time() - start_time,
+        "neo": result
     }
 
 # Streamlit
@@ -113,7 +119,7 @@ def get_pages() -> (int, int):
 
     with col2:
         num_pages = st.number_input(
-            "Number of pages (100 questions per page)", step=1, min_value=1, value=10
+            "Number of pages (100 questions per page)", step=1, min_value=1, value=25
         )
     
     st.caption("Only questions with answers will be imported.")
@@ -129,16 +135,17 @@ def render_page():
     site = get_site()
     tag = get_tag()
 
-    start_page, num_page = get_pages()
+    start_page, num_pages = get_pages()
 
     if st.button("Import", type="primary"):
         with st.spinner("Loading... This might take a minute or two."):
             try:
                 config = ImportConfig(tags=[tag])
-                import_data(config, site, page=start_page, pages=num_page)
-                st.success("Import successful", icon="✅")
-                st.caption("Data model")
+                result = import_data(config, site, page=start_page, pages=num_pages)
 
+                st.success(f"Imported {result['size']} questions in {result['duration']}", icon="✅")
+                
+                st.write(result)
             except Exception as e:
                 st.error(f"Error: {e}", icon="🚨")
 

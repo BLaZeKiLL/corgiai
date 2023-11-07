@@ -1,3 +1,5 @@
+import streamlit as st
+
 from langchain.graphs import Neo4jGraph
 
 from langchain.schema.embeddings import Embeddings
@@ -41,9 +43,9 @@ def insert_data(data: dict, embeddings: Embeddings, driver: Neo4jGraph) -> None:
 
     count = len(data["items"])
 
-    print(f'Generating embeddings for {count} items')
-
     i = 0
+
+    bar = st.progress(0, text=f"Embedding progress : {i}/{count}")
 
     for question in data["items"]:
         question_text = f'{question["title"]}\n{question["body_markdown"]}'
@@ -58,7 +60,7 @@ def insert_data(data: dict, embeddings: Embeddings, driver: Neo4jGraph) -> None:
         
         i += 1
 
-        print(f'Embedding progress : {i}/{count}')
+        bar.progress(i / count, f'Embedding progress : {i}/{count}')
 
     import_query = '''
     UNWIND $questions AS q
@@ -91,7 +93,7 @@ def insert_data(data: dict, embeddings: Embeddings, driver: Neo4jGraph) -> None:
     MERGE (owner)-[:ASKED]->(question)
     '''
 
-    driver.query(import_query, {
+    return driver.query(import_query, {
         "questions": data["items"],
         "site": data["site"]
     })
