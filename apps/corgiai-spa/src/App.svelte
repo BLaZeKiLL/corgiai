@@ -3,6 +3,7 @@
 
   import Chat from './lib/components/Chat.svelte';
   import Title from './lib/components/Title.svelte';
+    import { onMount } from 'svelte';
 
   let chat_start = false;
   let chat_ready = false;
@@ -15,7 +16,6 @@
 </script>
 
 <main class="flex w-screen flex-col place-content-center items-center gap-y-4">
-  
   {#if !chat_start}
     <span transition:fade on:outroend={() => chat_ready = true} class="grow mt-16">
       <Title/>
