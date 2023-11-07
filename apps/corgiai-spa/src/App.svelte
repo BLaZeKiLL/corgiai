@@ -15,12 +15,14 @@
   }
 </script>
 
-<main class="flex w-screen flex-col place-content-center items-center gap-y-4">
+<main class="flex w-full flex-col place-content-center items-center gap-y-4">
   {#if !chat_start}
     <span transition:fade on:outroend={() => chat_ready = true} class="grow mt-16">
       <Title/>
     </span>
   {/if}
+
+  <span class="flex-grow"></span>
 
   <Chat on:keyup={hide} ready={chat_ready}/>
 

@@ -35,7 +35,7 @@
 
 <form
   on:submit|preventDefault={send}
-  class="my-16 w-1/2 flex flex-col place-content-center items-center gap-y-4"
+  class="my-16 w-11/12 sm:w-8/12 lg:w-7/12 xl:w-6/12 flex flex-col place-content-center items-center gap-y-4"
 >
   <div class="w-full flex flex-row">
     <select
