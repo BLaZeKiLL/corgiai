@@ -49,22 +49,23 @@ def load_llm(model: str, config: dict) -> BaseChatModel:
 
 
 def configure_llm_chain_factory(llm: BaseChatModel, embeddings: Embeddings, graph_url: str, graph_username: str, graph_password: str):
+    # document variable name in load stuff chain is 'summaries'
     general_system_template = """ 
     Use the following pieces of context to answer the question at the end.
     The context contains question-answer pairs and their hyperlinks to a StackExchange forum post.
-    You should prefer information from accepted or more upvoted answers.
+    You should prefer information from more upvoted answers.
     Make sure to rely on information from the answers and not on questions to provide accurate responses.
-    When you find particular answer in the context useful, make sure to cite it in the answer using the link.
+    When you find particular answer in the context useful, make sure to cite it in the answer using the hyperlinks.
     If you don't know the answer, just say that you don't know, don't try to make up an answer.
     ----
     {summaries}
     ----
     Each answer you generate should contain a section at the end of hyperlinks to 
-    a StackExchange forum questions and answers you found useful, which are described under source value in metadata.
+    a StackExchange forum post you found useful, which are described under source value in metadata.
     You can only use hyperlinks that are present in the context, dont try to make up hyperlinks. 
     always add hyperlinks to the end of the answer in the style of citations.
     Generate concise answers with references sources section of hyperlinks to 
-    relevant a StackExchange forum questions only at the end of the answer.
+    relevant a StackExchange forum post only at the end of the answer.
     """
 
     general_user_template = "Question:```{question}```"

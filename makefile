@@ -4,6 +4,9 @@ req:
 spa:
 	cd apps/corgiai-spa && yarn dev
 
+rok:
+	ngrok http --domain=resolved-satyr-vital.ngrok-free.app 8080
+
 rund: tailscale
 	sudo docker compose --profile linux --env-file ./config/.env up --build -d
 

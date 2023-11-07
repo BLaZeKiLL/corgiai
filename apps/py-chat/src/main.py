@@ -7,7 +7,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from dtos import (
-    Question
+    Question,
+    Quiz
 )
 
 from neo import (
@@ -85,3 +86,11 @@ def question_query(question: Question):
         "duration": end_time - start_time,
         "text": result["answer"]
     }
+
+@app.post("/quiz")
+def quiz_question(quiz: Quiz):
+    start_time = time.time()
+
+    chain_time = time.time()
+
+    end_time = time.time()
