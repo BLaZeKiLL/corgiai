@@ -75,12 +75,15 @@ def import_data(config: ImportConfig, site: str, page: int = 1, pages: int = 10)
     if len(data["items"]) > 0:
         try:
             result = insert_data(data, embeddings, neo_graph)
-        except:
+        except Exception as e:
             return {
                 "status": "failed",
                 "description": "insert data failed",
                 "site": site,
+                "duration": time.time() - start_time,
                 "size": len(data["items"]),
+                "neo": result,
+                "error": e
             }
 
     return {

@@ -1,6 +1,8 @@
 import time
 import os
 import requests
+import json
+import regex
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
@@ -13,13 +15,15 @@ from dtos import (
 
 from neo import (
     connect_neo_graph,
-    create_vector_index
+    create_vector_index,
+    get_random_question
 )
 
 from chains import (
     load_embeddings,
     load_llm,
-    configure_qa_llm_chain_factory
+    configure_qa_llm_chain_factory,
+    configure_quiz_llm_chain
 )
 
 load_dotenv(".env")
@@ -45,7 +49,7 @@ create_vector_index(neo_graph, dimension)
 llm = load_llm(llm_name, config={"ollama_base_url": ollama_base_url})
 
 get_chain = configure_qa_llm_chain_factory(llm, embeddings, url, username, password)
-
+quiz_chain = configure_quiz_llm_chain()
 
 app = FastAPI()
 
@@ -87,10 +91,26 @@ def question_query(question: Question):
         "text": result["answer"]
     }
 
-@app.post("/quiz")
-def quiz_question(quiz: Quiz):
+@app.get("/question/{tag}")
+def get_question(tag: str):
+    return {
+        "question": get_random_question(neo_graph, tag)
+    }
+
+@app.get("/quiz/{tag}")
+def quiz_question(tag: str):
     start_time = time.time()
 
-    chain_time = time.time()
+    prompt = quiz_chain.format_prompt(question = get_random_question(neo_graph, tag))
+    output = llm(prompt.to_messages())
 
     end_time = time.time()
+
+    json_string = regex.search(r'```json\n(.*?)```', output.content, regex.DOTALL).group(1)
+
+    return {
+        "status": "sucess",
+        "model": llm_name,
+        "duration": end_time - start_time,
+        "quiz": json.loads(json_string)
+    }

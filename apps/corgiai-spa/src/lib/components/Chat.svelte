@@ -43,6 +43,7 @@
       bind:this={select}
       class="rounded-md bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-white border-slate-200 dark:border-slate-950"
     >
+      <option value="stackoverflow">Programming</option>
       <option value="math">Math</option>
       <option value="physics">Physics</option>
     </select>

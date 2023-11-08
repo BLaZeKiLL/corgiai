@@ -8,4 +8,4 @@ class Question(BaseModel):
 
 class Quiz(BaseModel):
     text: str
-    site: str
+    topic: str

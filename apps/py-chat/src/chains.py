@@ -15,6 +15,11 @@ from langchain.prompts.chat import (
     HumanMessagePromptTemplate,
 )
 
+from langchain.schema import HumanMessage
+from langchain.prompts import PromptTemplate
+
+from langchain.output_parsers import StructuredOutputParser, ResponseSchema
+
 # Should use $ENV:EMBEDDING_MODEL to choose an embedding model
 # dimensions are used by vector index and is model specific
 def load_embeddings(model: str, config: dict) -> tuple[Embeddings, int]:
@@ -139,4 +144,44 @@ def configure_qa_llm_chain_factory(llm: BaseChatModel, embeddings: Embeddings, g
 
 #Basic Prompt
 def configure_quiz_llm_chain():
-    pass
+    response_schemas = [
+        ResponseSchema(name="question", description="A multiple choice question generated from input text snippet."),
+        ResponseSchema(name="options", description="Possible choices for the multiple choice question."),
+        ResponseSchema(name="answer", description="Correct answer for the question.")
+    ]
+    
+    # The parser that will look for the LLM output in my schema and return it back to me
+    output_parser = StructuredOutputParser.from_response_schemas(response_schemas)
+    
+    # The format instructions that LangChain makes. Let's look at them
+    format_instructions = output_parser.get_format_instructions()
+
+    general_system_template = """
+    You are quiz creator
+    Use the following pieces of context to create multiple choice question.
+    The context contains a question and answer.
+    Use question and answer as refrence to create a new question and answer
+    Generate 4 possible answers out of which only one should be correct.
+    Use only the format instructions below for the output and nothing else.
+    {format_instructions}
+    ----
+    {question}
+    ----
+    """
+
+    # general_user_template = "Topic:```{topic}```"
+
+    messages = [
+        SystemMessagePromptTemplate.from_template(general_system_template),
+        # HumanMessagePromptTemplate.from_template(general_user_template),
+    ]
+
+    qa_prompt = ChatPromptTemplate(
+        messages=messages,
+        input_variables=['question'],
+        partial_variables={
+            "format_instructions": format_instructions
+        }
+    )
+
+    return qa_prompt

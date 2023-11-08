@@ -27,3 +27,6 @@ down:
 
 tailscale:
 	cd apps/corgiai-spa && node tailscale.env.js
+
+boop:
+	echo boop
