@@ -21,10 +21,10 @@
           Model : {message.model}, Response Time : {message.time.toFixed(3)} sec
         </span>
       {/if}
-      <article class="prose max-w-full">
+      <article class="prose dark:prose-invert max-w-full">
         <SvelteMarkdown
           source={message.text}
-          renderers={{ link: MdLink, text: MdText }}
+          renderers={{ link: MdLink }}
           on:parsed={mathjax}
         />
       </article>
