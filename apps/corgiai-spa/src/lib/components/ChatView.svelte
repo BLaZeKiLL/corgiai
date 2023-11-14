@@ -2,8 +2,6 @@
   import { tick } from 'svelte';
 
   import SvelteMarkdown from 'svelte-markdown';
-  import MdLink from './MdLink.svelte';
-  import MdText from './MdText.svelte';
   import { chatStore } from '../stores/chat.store';
 
   const mathjax = async () => {
@@ -21,10 +19,9 @@
           Model : {message.model}, Response Time : {message.time.toFixed(3)} sec
         </span>
       {/if}
-      <article class="prose dark:prose-invert max-w-full">
+      <article class="max-w-full prose dark:prose-invert prose-a:text-blue-500">
         <SvelteMarkdown
           source={message.text}
-          renderers={{ link: MdLink }}
           on:parsed={mathjax}
         />
       </article>

@@ -1,8 +1,6 @@
 <script lang="ts">
   import SvelteMarkdown from 'svelte-markdown';
   import corgiaiLogo from '/corgi.svg';
-  import MdLink from './MdLink.svelte';
-  import MdText from './MdText.svelte';
   import { quizStore, QUESTIONS } from '../stores/quiz.store';
 
   let ans_elem: HTMLInputElement[] = [];
@@ -33,7 +31,9 @@
 
 <div class="grow mt-16 w-1/2 text-start overflow-y-auto">
   {#if result}
-    <div class="w-full h-full flex flex-col gap-4 place-content-center items-center">
+    <div
+      class="w-full h-full flex flex-col gap-4 place-content-center items-center"
+    >
       <img src={corgiaiLogo} class="w-64 logo corgi" alt="Corgi AI Logo" />
       <h1 class="text-slate-900 dark:text-white text-xl">Your Score:</h1>
       <h1 class="text-slate-900 dark:text-white text-2xl">
@@ -46,16 +46,13 @@
     <div
       class="flex flex-col gap-4 w-full p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
     >
-      <span class="mb-8 flex flex-col gap-2">
-        <span class="text-slate-900 dark:text-white font-bold">Question:</span>
-        <SvelteMarkdown
-          source={current.question}
-          renderers={{ link: MdLink, text: MdText }}
-        />
-      </span>
-
+      <span class="text-slate-900 dark:text-white font-bold">Question:</span>
+      <article class="max-w-full prose dark:prose-invert prose-a:text-blue-500">
+        <SvelteMarkdown source={current.question} />
+      </article>
+      <span class="text-slate-900 dark:text-white font-bold">Answers:</span>
       {#each current.answers as ans, index (ans.id)}
-        <span class="flex flex-row gap-2">
+        <span class="flex flex-row items-center gap-2">
           <input
             type="checkbox"
             bind:this={ans_elem[index]}
@@ -63,14 +60,15 @@
           />
           <span class="text-slate-900 dark:text-white font-bold">{ans.id}:</span
           >
-          <SvelteMarkdown
-            source={ans.text}
-            renderers={{ link: MdLink, text: MdText }}
-          />
+          <article
+            class="max-w-full prose dark:prose-invert prose-a:text-blue-500"
+          >
+            <SvelteMarkdown source={ans.text} />
+          </article>
         </span>
       {/each}
 
-      <div class="self-end w-full flex flex-grow place-content-center">
+      <div class="self-end mt-8 w-full flex flex-grow place-content-center">
         <button
           type="button"
           on:click={next_question}
