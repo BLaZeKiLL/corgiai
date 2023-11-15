@@ -2,7 +2,8 @@
 export default {
   darkMode: 'media',
   content: [
-    "./src/**/*.{svelte,js,ts,jsx,tsx,html}",
+    "./src/**/*.{html,js,svelte,ts}",
+    "./node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}",
   ],
   theme: {
     extend: {

@@ -105,5 +105,18 @@ services:
         - action: rebuild
           path: ./apps/corgiai-spa
 
+  app:
+    image: corgiai/app:latest
+    build:
+      context: ./apps/corgiai
+    networks:
+      - corgi-net
+    ports:
+      - 8001:8001
+    x-develop: # x here is important for some reason
+      watch:
+        - action: rebuild
+          path: ./apps/corgiai
+
 networks:
   corgi-net:
