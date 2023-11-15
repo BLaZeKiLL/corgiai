@@ -9,4 +9,7 @@ declare global {
 	}
 }
 
+declare const MathJax;
+
 export {};
+

@@ -89,21 +89,6 @@ services:
       - LLM=${LLM-llama2}
     networks:
       - corgi-net
-  
-  spa:
-    image: corgiai/spa:latest
-    build:
-      context: ./apps/corgiai-spa
-      args:
-        - MODE=tailscale
-    networks:
-      - corgi-net
-    ports:
-      - 8080:80
-    x-develop: # x here is important for some reason
-      watch:
-        - action: rebuild
-          path: ./apps/corgiai-spa
 
   app:
     image: corgiai/app:latest
@@ -112,7 +97,12 @@ services:
     networks:
       - corgi-net
     ports:
-      - 8001:8001
+      - 8080:8080
+    depends_on:
+      pull-model:
+        condition: service_completed_successfully
+      neo:
+        condition: service_healthy
     x-develop: # x here is important for some reason
       watch:
         - action: rebuild
