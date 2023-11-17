@@ -83,7 +83,7 @@ services:
   pull-model:
     image: corgiai.azurecr.io/corgiai/pull-model:latest
     build:
-      dockerfile: pull_model.Dockerfile
+      context: ./apps/pull-model
     environment:
       - OLLAMA_BASE_URL=${OLLAMA_BASE_URL-http://host.docker.internal:11434}
       - LLM=${LLM-llama2}
