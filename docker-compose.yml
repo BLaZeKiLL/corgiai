@@ -36,7 +36,7 @@ services:
       - corgi-net
 
   py-loader:
-    image: corgiai/py-loader:latest
+    image: corgiai.azurecr.io/corgiai/py-loader:latest
     build:
       context: ./apps/py-loader
       additional_contexts:
@@ -59,7 +59,7 @@ services:
           path: ./apps/py-loader
 
   py-chat:
-    image: corgiai/py-chat:latest
+    image: corgiai.azurecr.io/corgiai/py-chat:latest
     build:
       context: ./apps/py-chat
       additional_contexts:
@@ -81,7 +81,7 @@ services:
           path: ./apps/py-chat
   
   pull-model:
-    image: corgiai/pull-model:latest
+    image: corgiai.azurecr.io/corgiai/pull-model:latest
     build:
       dockerfile: pull_model.Dockerfile
     environment:
@@ -91,7 +91,7 @@ services:
       - corgi-net
 
   app:
-    image: corgiai/app:latest
+    image: corgiai.azurecr.io/corgiai/app:latest
     build:
       context: ./apps/corgiai
     networks:

@@ -1,4 +1,4 @@
-FROM node:lts as builder
+FROM node:lts-alpine as builder
 
 WORKDIR /app
 
@@ -11,7 +11,7 @@ COPY . .
 
 RUN NODE_ENV=production yarn build
 
-FROM node:lts as runtime
+FROM node:lts-alpine as runtime
 
 COPY --from=builder /app/build app/build
 
@@ -22,7 +22,7 @@ COPY yarn.lock .
 
 RUN yarn install --frozen-lockfile --production
 
-FROM node:lts
+FROM node:lts-alpine
 
 COPY --from=runtime /app/build app/build
 COPY --from=runtime /app/node_modules app/node_modules

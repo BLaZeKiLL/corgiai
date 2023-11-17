@@ -1,0 +1,43 @@
+
+name: Contentious Deployment
+
+on:
+  # push:
+  #   branches:
+  #     - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: 
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        build:
+          - { path: ./apps/corgiai, tag: corgiai/app:latest }
+          - { path: ./apps/py-chat, tag: corgiai/py-chat:latest }
+          - { path: ./apps/py-loader, tag: corgiai/py-loader:latest }
+          - { path: pull_model.Dockerfile, tag: corgiai/pull-model:latest }
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 'Login via Azure'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      - name: 'Login Azure Container Registery'
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: 'Build'
+        run: docker build ${{ matrix.build.path }} -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ matrix.build.tag }}
+          
+      - name: 'Push'
+        run: docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ matrix.build.tag }}
