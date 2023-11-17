@@ -1,0 +1,532 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.k8s.yml
+        -o azure.yml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: app
+    name: app
+  spec:
+    ports:
+    - name: "8080"
+      port: 8080
+      targetPort: 8080
+    selector:
+      io.kompose.service: app
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.k8s.yml
+        -o azure.yml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: llm
+    name: llm
+  spec:
+    ports:
+    - name: "11434"
+      port: 11434
+      targetPort: 11434
+    selector:
+      io.kompose.service: llm
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.k8s.yml
+        -o azure.yml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: neo
+    name: neo
+  spec:
+    ports:
+    - name: "7687"
+      port: 7687
+      targetPort: 7687
+    - name: "7474"
+      port: 7474
+      targetPort: 7474
+    selector:
+      io.kompose.service: neo
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.k8s.yml
+        -o azure.yml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: py-chat
+    name: py-chat
+  spec:
+    ports:
+    - name: "8200"
+      port: 8200
+      targetPort: 8200
+    selector:
+      io.kompose.service: py-chat
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.k8s.yml
+        -o azure.yml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: py-loader
+    name: py-loader
+  spec:
+    ports:
+    - name: "8081"
+      port: 8081
+      targetPort: 8080
+    - name: "8100"
+      port: 8100
+      targetPort: 8100
+    selector:
+      io.kompose.service: py-loader
+  status:
+    loadBalancer: {}
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.k8s.yml
+        -o azure.yml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: app
+    name: app
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        io.kompose.service: app
+    strategy: {}
+    template:
+      metadata:
+        annotations:
+          kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.k8s.yml
+            -o azure.yml
+          kompose.version: 1.21.0 (992df58d8)
+        creationTimestamp: null
+        labels:
+          io.kompose.network/corgi-net: "true"
+          io.kompose.service: app
+      spec:
+        containers:
+        - image: corgiai.azurecr.io/corgiai/app:latest
+          imagePullPolicy: ""
+          name: app
+          ports:
+          - containerPort: 8080
+          resources: {}
+        restartPolicy: Always
+        serviceAccountName: ""
+        volumes: null
+  status: {}
+- apiVersion: extensions/v1beta1
+  kind: NetworkPolicy
+  metadata:
+    creationTimestamp: null
+    name: corgi-net
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            io.kompose.network/corgi-net: "true"
+    podSelector:
+      matchLabels:
+        io.kompose.network/corgi-net: "true"
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.k8s.yml
+        -o azure.yml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: llm
+    name: llm
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        io.kompose.service: llm
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        annotations:
+          kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.k8s.yml
+            -o azure.yml
+          kompose.version: 1.21.0 (992df58d8)
+        creationTimestamp: null
+        labels:
+          io.kompose.network/corgi-net: "true"
+          io.kompose.service: llm
+      spec:
+        containers:
+        - image: ollama/ollama:latest
+          imagePullPolicy: ""
+          name: llm
+          ports:
+          - containerPort: 11434
+          resources: {}
+          volumeMounts:
+          - mountPath: /root/.ollama
+            name: llm-claim0
+        restartPolicy: Always
+        serviceAccountName: ""
+        volumes:
+        - name: llm-claim0
+          persistentVolumeClaim:
+            claimName: llm-claim0
+  status: {}
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    creationTimestamp: null
+    labels:
+      io.kompose.service: llm-claim0
+    name: llm-claim0
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 100Mi
+  status: {}
+- apiVersion: extensions/v1beta1
+  kind: NetworkPolicy
+  metadata:
+    creationTimestamp: null
+    name: corgi-net
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            io.kompose.network/corgi-net: "true"
+    podSelector:
+      matchLabels:
+        io.kompose.network/corgi-net: "true"
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.k8s.yml
+        -o azure.yml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: neo
+    name: neo
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        io.kompose.service: neo
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        annotations:
+          kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.k8s.yml
+            -o azure.yml
+          kompose.version: 1.21.0 (992df58d8)
+        creationTimestamp: null
+        labels:
+          io.kompose.network/corgi-net: "true"
+          io.kompose.service: neo
+      spec:
+        containers:
+        - env:
+          - name: NEO4J_AUTH
+            value: neo4j/password
+          - name: NEO4J_PLUGINS
+            value: '["apoc"]'
+          - name: NEO4J_db_tx__log_rotation_retention__policy
+            value: "false"
+          image: neo4j:5.13
+          imagePullPolicy: ""
+          livenessProbe:
+            exec:
+              command:
+              - wget --no-verbose --tries=1 --spider localhost:7474 || exit 1
+            failureThreshold: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+          name: neo
+          ports:
+          - containerPort: 7687
+          - containerPort: 7474
+          resources: {}
+          volumeMounts:
+          - mountPath: /data
+            name: neo-claim0
+        restartPolicy: Always
+        serviceAccountName: ""
+        volumes:
+        - name: neo-claim0
+          persistentVolumeClaim:
+            claimName: neo-claim0
+  status: {}
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    creationTimestamp: null
+    labels:
+      io.kompose.service: neo-claim0
+    name: neo-claim0
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 100Mi
+  status: {}
+- apiVersion: extensions/v1beta1
+  kind: NetworkPolicy
+  metadata:
+    creationTimestamp: null
+    name: corgi-net
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            io.kompose.network/corgi-net: "true"
+    podSelector:
+      matchLabels:
+        io.kompose.network/corgi-net: "true"
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.k8s.yml
+        -o azure.yml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: pull-model
+    name: pull-model
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        io.kompose.service: pull-model
+    strategy: {}
+    template:
+      metadata:
+        annotations:
+          kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.k8s.yml
+            -o azure.yml
+          kompose.version: 1.21.0 (992df58d8)
+        creationTimestamp: null
+        labels:
+          io.kompose.network/corgi-net: "true"
+          io.kompose.service: pull-model
+      spec:
+        containers:
+        - env:
+          - name: LLM
+            value: llama2
+          - name: OLLAMA_BASE_URL
+            value: http://host.docker.internal:11434
+          image: corgiai.azurecr.io/corgiai/pull-model:latest
+          imagePullPolicy: ""
+          name: pull-model
+          resources: {}
+        restartPolicy: Always
+        serviceAccountName: ""
+        volumes: null
+  status: {}
+- apiVersion: extensions/v1beta1
+  kind: NetworkPolicy
+  metadata:
+    creationTimestamp: null
+    name: corgi-net
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            io.kompose.network/corgi-net: "true"
+    podSelector:
+      matchLabels:
+        io.kompose.network/corgi-net: "true"
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.k8s.yml
+        -o azure.yml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: py-chat
+    name: py-chat
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        io.kompose.service: py-chat
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        annotations:
+          kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.k8s.yml
+            -o azure.yml
+          kompose.version: 1.21.0 (992df58d8)
+        creationTimestamp: null
+        labels:
+          io.kompose.network/corgi-net: "true"
+          io.kompose.service: py-chat
+      spec:
+        containers:
+        - image: corgiai.azurecr.io/corgiai/py-chat:latest
+          imagePullPolicy: ""
+          name: py-chat
+          ports:
+          - containerPort: 8200
+          resources: {}
+          volumeMounts:
+          - mountPath: /embedding_model
+            name: py-chat-claim0
+        restartPolicy: Always
+        serviceAccountName: ""
+        volumes:
+        - name: py-chat-claim0
+          persistentVolumeClaim:
+            claimName: py-chat-claim0
+  status: {}
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    creationTimestamp: null
+    labels:
+      io.kompose.service: py-chat-claim0
+    name: py-chat-claim0
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 100Mi
+  status: {}
+- apiVersion: extensions/v1beta1
+  kind: NetworkPolicy
+  metadata:
+    creationTimestamp: null
+    name: corgi-net
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            io.kompose.network/corgi-net: "true"
+    podSelector:
+      matchLabels:
+        io.kompose.network/corgi-net: "true"
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.k8s.yml
+        -o azure.yml
+      kompose.version: 1.21.0 (992df58d8)
+    creationTimestamp: null
+    labels:
+      io.kompose.service: py-loader
+    name: py-loader
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        io.kompose.service: py-loader
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        annotations:
+          kompose.cmd: /snap/kompose/19/kompose-linux-amd64 convert -f docker-compose.k8s.yml
+            -o azure.yml
+          kompose.version: 1.21.0 (992df58d8)
+        creationTimestamp: null
+        labels:
+          io.kompose.network/corgi-net: "true"
+          io.kompose.service: py-loader
+      spec:
+        containers:
+        - image: corgiai.azurecr.io/corgiai/py-loader:latest
+          imagePullPolicy: ""
+          name: py-loader
+          ports:
+          - containerPort: 8080
+          - containerPort: 8100
+          resources: {}
+          volumeMounts:
+          - mountPath: /embedding_model
+            name: py-loader-claim0
+        restartPolicy: Always
+        serviceAccountName: ""
+        volumes:
+        - name: py-loader-claim0
+          persistentVolumeClaim:
+            claimName: py-loader-claim0
+  status: {}
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    creationTimestamp: null
+    labels:
+      io.kompose.service: py-loader-claim0
+    name: py-loader-claim0
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 100Mi
+  status: {}
+- apiVersion: extensions/v1beta1
+  kind: NetworkPolicy
+  metadata:
+    creationTimestamp: null
+    name: corgi-net
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            io.kompose.network/corgi-net: "true"
+    podSelector:
+      matchLabels:
+        io.kompose.network/corgi-net: "true"
+kind: List
+metadata: {}
+

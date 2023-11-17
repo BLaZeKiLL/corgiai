@@ -3,20 +3,12 @@ version: "3"
 services:
   llm:
     image: ollama/ollama:latest
-    profiles: ["linux"]
     volumes:
       - ./data/ollama:/root/.ollama
     ports:
       - 11434:11434
     networks:
       - corgi-net
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1 
-              capabilities: [ gpu ]
 
   neo:
     image: neo4j:5.13
@@ -39,10 +31,6 @@ services:
 
   py-loader:
     image: corgiai.azurecr.io/corgiai/py-loader:latest
-    build:
-      context: ./apps/py-loader
-      additional_contexts:
-        config: ./config
     networks:
       - corgi-net
     ports:
@@ -50,42 +38,18 @@ services:
       - 8100:8100
     volumes:
       - ./data/embedding_model:/embedding_model
-    depends_on:
-      pull-model:
-        condition: service_completed_successfully
-      neo:
-        condition: service_healthy
-    x-develop: # x here is important for some reason
-      watch:
-        - action: rebuild
-          path: ./apps/py-loader
 
   py-chat:
     image: corgiai.azurecr.io/corgiai/py-chat:latest
-    build:
-      context: ./apps/py-chat
-      additional_contexts:
-        config: ./config
     networks:
       - corgi-net
     ports:
       - 8200:8200
     volumes:
       - ./data/embedding_model:/embedding_model
-    depends_on:
-      pull-model:
-        condition: service_completed_successfully
-      neo:
-        condition: service_healthy
-    x-develop: # x here is important for some reason
-      watch:
-        - action: rebuild
-          path: ./apps/py-chat
   
   pull-model:
     image: corgiai.azurecr.io/corgiai/pull-model:latest
-    build:
-      context: ./apps/pull-model
     environment:
       - OLLAMA_BASE_URL=${OLLAMA_BASE_URL-http://host.docker.internal:11434}
       - LLM=${LLM-llama2}
@@ -94,21 +58,10 @@ services:
 
   app:
     image: corgiai.azurecr.io/corgiai/app:latest
-    build:
-      context: ./apps/corgiai
     networks:
       - corgi-net
     ports:
       - 8080:8080
-    depends_on:
-      pull-model:
-        condition: service_completed_successfully
-      neo:
-        condition: service_healthy
-    x-develop: # x here is important for some reason
-      watch:
-        - action: rebuild
-          path: ./apps/corgiai
 
 networks:
   corgi-net:
