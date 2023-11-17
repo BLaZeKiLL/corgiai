@@ -13,13 +13,13 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         build:
           - { path: "./apps/corgiai", tag: "corgiai/app:latest" }
           - { path: "./apps/py-chat", tag: "corgiai/py-chat:latest" }
           - { path: "./apps/py-loader", tag: "corgiai/py-loader:latest" }
-          - { path: "pull_model.Dockerfile", tag: "corgiai/pull-model:latest" }
+          - { path: "./pull_model.Dockerfile", tag: "corgiai/pull-model:latest" }
 
     steps:
       - uses: actions/checkout@v4
@@ -37,7 +37,7 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: 'Build'
-        run: docker build ${{ matrix.build.path }} -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ matrix.build.tag }}
+        run: docker build ${{ matrix.build.path }} -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ matrix.build.tag }} --build-context config=./config
           
       - name: 'Push'
         run: docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ matrix.build.tag }}
