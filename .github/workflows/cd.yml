@@ -19,7 +19,7 @@ jobs:
           - { path: "./apps/corgiai", tag: "corgiai/app:latest" }
           - { path: "./apps/py-chat", tag: "corgiai/py-chat:latest" }
           - { path: "./apps/py-loader", tag: "corgiai/py-loader:latest" }
-          - { path: "./apps/pull_model", tag: "corgiai/pull-model:latest" }
+          - { path: "./apps/pull-model", tag: "corgiai/pull-model:latest" }
 
     steps:
       - uses: actions/checkout@v4
