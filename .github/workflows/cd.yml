@@ -16,10 +16,10 @@ jobs:
       fail-fast: false
       matrix:
         build:
-          - { path: ./apps/corgiai, tag: corgiai/app:latest }
-          - { path: ./apps/py-chat, tag: corgiai/py-chat:latest }
-          - { path: ./apps/py-loader, tag: corgiai/py-loader:latest }
-          - { path: pull_model.Dockerfile, tag: corgiai/pull-model:latest }
+          - { path: "./apps/corgiai", tag: "corgiai/app:latest" }
+          - { path: "./apps/py-chat", tag: "corgiai/py-chat:latest" }
+          - { path: "./apps/py-loader", tag: "corgiai/py-loader:latest" }
+          - { path: "pull_model.Dockerfile", tag: "corgiai/pull-model:latest" }
 
     steps:
       - uses: actions/checkout@v4
