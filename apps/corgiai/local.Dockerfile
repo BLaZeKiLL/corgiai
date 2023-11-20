@@ -29,6 +29,7 @@ COPY --from=runtime /app/node_modules app/node_modules
 
 WORKDIR /app
 
+COPY .env.production .env
 COPY package.json .
 COPY yarn.lock .
 
@@ -42,4 +43,4 @@ ENV HOST=${HOST}
 
 EXPOSE ${PORT}
 
-ENTRYPOINT [ "node", "build" ]
+ENTRYPOINT [ "node", "-r", "dotenv/config", "build" ]

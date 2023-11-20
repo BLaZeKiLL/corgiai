@@ -27,18 +27,19 @@ FROM node:lts-alpine
 COPY --from=runtime /app/build app/build
 COPY --from=runtime /app/node_modules app/node_modules
 
+# Copy Tailscale binaries from the tailscale image on Docker Hub.
+COPY --from=docker.io/tailscale/tailscale:stable /usr/local/bin/tailscaled /app/tailscaled
+COPY --from=docker.io/tailscale/tailscale:stable /usr/local/bin/tailscale /app/tailscale
+RUN mkdir -p /var/run/tailscale /var/cache/tailscale /var/lib/tailscale
+
 WORKDIR /app
 
+COPY .env.production .env
 COPY package.json .
 COPY yarn.lock .
 COPY start.sh .
 
 RUN ["chmod", "0755", "./start.sh"]
-
-# Copy Tailscale binaries from the tailscale image on Docker Hub.
-COPY --from=docker.io/tailscale/tailscale:stable /usr/local/bin/tailscaled /app/tailscaled
-COPY --from=docker.io/tailscale/tailscale:stable /usr/local/bin/tailscale /app/tailscale
-RUN mkdir -p /var/run/tailscale /var/cache/tailscale /var/lib/tailscale
 
 ENV NODE_ENV=production
 
