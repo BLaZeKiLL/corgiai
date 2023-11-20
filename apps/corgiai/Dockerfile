@@ -48,4 +48,4 @@ ENV HOST=${HOST}
 
 EXPOSE ${PORT}
 
-ENTRYPOINT [ "start.sh" ]
+ENTRYPOINT [ "./start.sh" ]
