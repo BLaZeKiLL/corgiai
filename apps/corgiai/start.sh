@@ -4,8 +4,4 @@ echo CORGI APP STARTUP
 /app/tailscale login --hostname=azure-corgiai
 /app/tailscale up 
 
-API_PY_CHAT=http://$(/app/tailscale ip -4 codeblazeserver):8200
-
-echo API_PY_CHAT = $API_PY_CHAT
-
-ALL_PROXY=socks5://localhost:1055/ node -r dotenv/config build
+ALL_PROXY=socks5://localhost:1055/ API_PY_CHAT=http://$(/app/tailscale ip -4 codeblazeserver):8200 node build
