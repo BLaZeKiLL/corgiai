@@ -15,10 +15,10 @@ jobs:
       fail-fast: true
       matrix:
         build:
-          - { path: "./apps/corgiai", tag: "ghcr.io/blazekill/corgiai/app:latest" }
-          # - { path: "./apps/py-chat", tag: "corgiai/py-chat:latest" }
-          # - { path: "./apps/py-loader", tag: "corgiai/py-loader:latest" }
-          # - { path: "./apps/pull-model", tag: "corgiai/pull-model:latest" }
+          - { path: "./apps/corgiai", tag: "ghcr.io/blazekill/corgiai/app" }
+          # - { path: "./apps/py-chat", tag: "corgiai/py-chat" }
+          # - { path: "./apps/py-loader", tag: "corgiai/py-loader" }
+          # - { path: "./apps/pull-model", tag: "corgiai/pull-model" }
 
     steps:
       - uses: actions/checkout@v4
@@ -35,24 +35,6 @@ jobs:
         with:
           push: true
           context: ${{ matrix.build.path }}
-          tags: ${{ matrix.build.tag }}
+          tags: ${{ matrix.build.tag }}:${{ github.sha }}
           build-contexts: |
             config=./config
-    
-  deploy:
-    name: Deploy
-    runs-on: ubuntu-latest
-    needs: [build]
-
-    # environment:
-    #   url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
-    steps:
-      - name: Deploy To Azure
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'corgiai'
-          slot-name: 'production'
-          publish-profile: ${{ secrets.AzureAppService_PublishProfile_1446078158394201bbff30da3cfe1880 }}
-          images: 'ghcr.io/blazekill/corgiai/app:latest'
