@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import { json } from '@sveltejs/kit';
 
 import type { ChatRequest } from '$lib/models/request';
@@ -10,15 +12,14 @@ export async function POST({ request }) {
 
     console.log(`Chat API : ${env.API_PY_CHAT}`);
 
-    const response = await fetch(`${env.API_PY_CHAT}/query`, {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body)
+    const response = await axios.post(`${env.API_PY_CHAT}/query`, body, {
+        proxy: {
+            host: 'localhost',
+            port: 1055
+        }
     });
 
-    const result: ChatResponse = await response.json();
+    const result: ChatResponse = response.data;
 
     console.log(result);
 
