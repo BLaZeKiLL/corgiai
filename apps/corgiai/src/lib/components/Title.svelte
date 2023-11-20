@@ -17,7 +17,7 @@
     <img src={pythonLogo} class="w-16 md:w-24 lg:w-30 xl:w-36 logo python" alt="Python Logo" />
   </div>
   
-  <div class="mt-32 flex flex-col place-content-center items-center gap-y-4">
+  <div class="mt-8 sm:mt-32 flex flex-col place-content-center items-center gap-y-4">
     <h1 class="text-4xl text-slate-900 dark:text-white">Corgi AI</h1>
     <p class="text-slate-500 dark:text-slate-400">
       {mode}

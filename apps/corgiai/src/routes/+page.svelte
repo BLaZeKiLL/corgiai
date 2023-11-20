@@ -12,19 +12,13 @@
 
     let mode: AppMode = AppMode.CHAT;
 
-    const hide = (event: KeyboardEvent) => {
-        if (event.code === 'Enter') {
-            start = true;
-        }
-    }
-
     const changemode = (event: CustomEvent<AppMode>) => {
         mode = event.detail;
         console.log(mode);
     }
 </script>
 
-<div class="w-full h-full flex flex-col place-content-center items-center">
+<div class="grow flex flex-col place-content-center items-center">
     {#if !start}
         <span transition:fade on:outroend={() => ready = true}>
             <Title />
@@ -35,9 +29,7 @@
         <Chat />
     {/if}
 
-
-
     <span class="grow"></span>
 
-    <UserInput on:keyup={hide} on:changemode={changemode}/>
+    <UserInput on:start={() => start = true} on:changemode={changemode}/>
 </div>

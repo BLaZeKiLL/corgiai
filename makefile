@@ -1,11 +1,5 @@
-req:
-	pipreqs ./apps/py-loader ;\
-
-spa:
-	cd apps/corgiai-spa && yarn dev
-
-rok:
-	ngrok http --domain=resolved-satyr-vital.ngrok-free.app 8080
+app:
+	cd apps/corgiai && yarn dev
 
 rund:
 	sudo docker compose --profile linux --env-file ./config/.env up --build -d
@@ -25,8 +19,5 @@ stats:
 down:
 	sudo docker compose down
 
-boop:
-	echo boop
-
 build-app:
-	sudo docker build ./apps/corgiai -t corgiai:latest --build-context config=./config --platform linux/amd64
+	sudo docker build ./apps/corgiai -t corgiai:latest --build-context config=./config
