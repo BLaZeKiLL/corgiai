@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: 'Login Github Container Registery'
         uses: docker/login-action@v1
         with:
@@ -39,3 +39,21 @@ jobs:
           tags: ${{ matrix.build.tag }}
           build-contexts: |
             config=./config
+    
+  deploy:
+    name: Deploy ${{ matrix.build.tag }}
+    runs-on: ubuntu-latest
+    needs: [build]
+
+    environment:
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Deploy To Azure
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'corgiai'
+          slot-name: 'production'
+          publish-profile: ${{ secrets.AzureAppService_PublishProfile_1446078158394201bbff30da3cfe1880 }}
+          images: 'ghcr.io/blazekill/corgiai/app:latest'
