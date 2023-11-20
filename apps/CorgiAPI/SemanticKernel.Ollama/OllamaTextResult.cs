@@ -17,4 +17,14 @@ namespace SemanticKernel.Ollama
             return Task.FromResult(result);
         }
     }
+
+    internal class OllamaTextStreamingResult(string result) : ITextStreamingResult
+    {
+        public ModelResult ModelResult => new(result);
+
+        public async IAsyncEnumerable<string> GetCompletionStreamingAsync(CancellationToken cancellationToken = default)
+        {
+            yield return result;
+        }
+    }
 }

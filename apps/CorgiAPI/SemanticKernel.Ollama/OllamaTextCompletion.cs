@@ -36,7 +36,8 @@ namespace SemanticKernel.Ollama
             {
                 model = Attributes["model_id"],
                 prompt = text,
-                stream = false
+                stream = false,
+                options = requestSettings?.ExtensionData,
             };
 
             var response = await _httpClient.PostAsJsonAsync($"{Attributes["base_url"]}/api/generate", data, cancellationToken);
@@ -49,9 +50,37 @@ namespace SemanticKernel.Ollama
         }
 
 
-        public IAsyncEnumerable<ITextStreamingResult> GetStreamingCompletionsAsync(string text, AIRequestSettings? requestSettings = null, CancellationToken cancellationToken = default)
+        public async IAsyncEnumerable<ITextStreamingResult> GetStreamingCompletionsAsync(string text, AIRequestSettings? requestSettings = null, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var data = new
+            {
+                model = Attributes["model_id"],
+                prompt = text,
+                stream = true,
+                options = requestSettings?.ExtensionData,
+            };
+
+            var response = await _httpClient.PostAsJsonAsync($"{Attributes["base_url"]}/api/generate", data, cancellationToken);
+
+            var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+
+            using (stream)
+            {
+                using var reader = new StreamReader(stream);
+
+                var done = false;
+
+                while (!done)
+                {
+                    var json = JsonSerializer.Deserialize<JsonNode>(
+                        await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false)
+                    );
+
+                    done = json!["done"]!.GetValue<bool>();
+
+                    yield return new OllamaTextStreamingResult(json!["response"]!.GetValue<string>());
+                }
+            }
         }
 
 

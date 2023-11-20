@@ -18,9 +18,11 @@ namespace PromtMaker
             await BasicPrompt();
         }
 
-        public async Task StopAsync(CancellationToken cancellationToken)
+        public Task StopAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Prompt Maker Done");
+
+            return Task.CompletedTask;
         }
 
         private async Task BasicPrompt()
