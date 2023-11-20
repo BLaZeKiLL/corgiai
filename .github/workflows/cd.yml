@@ -16,28 +16,26 @@ jobs:
       fail-fast: true
       matrix:
         build:
-          - { path: "./apps/corgiai", tag: "corgiai/app:latest" }
-          - { path: "./apps/py-chat", tag: "corgiai/py-chat:latest" }
-          - { path: "./apps/py-loader", tag: "corgiai/py-loader:latest" }
-          - { path: "./apps/pull-model", tag: "corgiai/pull-model:latest" }
+          - { path: "./apps/corgiai", tag: "ghcr.io/blazekill/corgiai/app:latest" }
+          # - { path: "./apps/py-chat", tag: "corgiai/py-chat:latest" }
+          # - { path: "./apps/py-loader", tag: "corgiai/py-loader:latest" }
+          # - { path: "./apps/pull-model", tag: "corgiai/pull-model:latest" }
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: 'Login via Azure'
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
       
-      - name: 'Login Azure Container Registery'
-        uses: azure/docker-login@v1
+      - name: 'Login Github Container Registery'
+        uses: docker/login-action@v1
         with:
-          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 'Build'
-        run: docker build ${{ matrix.build.path }} -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ matrix.build.tag }} --build-context config=./config
-          
-      - name: 'Push'
-        run: docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ matrix.build.tag }}
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          context: ${{ matrix.build.path }}
+          tags: ${{ matrix.build.tag }}
+          build-contexts: |
+            config=./config

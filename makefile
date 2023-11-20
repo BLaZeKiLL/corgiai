@@ -7,10 +7,10 @@ spa:
 rok:
 	ngrok http --domain=resolved-satyr-vital.ngrok-free.app 8080
 
-rund: tailscale
+rund:
 	sudo docker compose --profile linux --env-file ./config/.env up --build -d
 
-run: tailscale
+run:
 	sudo docker compose --profile linux --env-file ./config/.env up --build
 
 clean:
@@ -25,11 +25,8 @@ stats:
 down:
 	sudo docker compose down
 
-tailscale:
-	cd apps/corgiai-spa && node tailscale.env.js
-
 boop:
 	echo boop
 
 build-app:
-	docker build ./apps/corgiai -t corgiai:latest --build-context config=./config --platform linux/amd64 --progress=plain
+	sudo docker build ./apps/corgiai -t corgiai:latest --build-context config=./config --platform linux/amd64

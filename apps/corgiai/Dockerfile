@@ -33,7 +33,7 @@ COPY package.json .
 COPY yarn.lock .
 COPY start.sh .
 
-RUN ["chmod", "+x", "./start.sh"]
+RUN ["chmod", "0755", "./start.sh"]
 
 # Copy Tailscale binaries from the tailscale image on Docker Hub.
 COPY --from=docker.io/tailscale/tailscale:stable /usr/local/bin/tailscaled /app/tailscaled
@@ -50,4 +50,4 @@ ENV HOST=${HOST}
 
 EXPOSE ${PORT}
 
-ENTRYPOINT [ "./start.sh" ]
+ENTRYPOINT [ "sh", "./start.sh" ]
