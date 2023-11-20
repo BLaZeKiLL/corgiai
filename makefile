@@ -32,4 +32,4 @@ boop:
 	echo boop
 
 build-app:
-	docker build ./apps/corgiai -t corgiai:latest --build-context config=./config
+	docker build ./apps/corgiai -t corgiai:latest --build-context config=./config --platform linux/amd64 --progress=plain
