@@ -30,3 +30,6 @@ tailscale:
 
 boop:
 	echo boop
+
+build-app:
+	docker build ./apps/corgiai -t corgiai:latest --build-context config=./config

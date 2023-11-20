@@ -32,7 +32,15 @@ WORKDIR /app
 COPY package.json .
 COPY yarn.lock .
 
+# Copy Tailscale binaries from the tailscale image on Docker Hub.
+COPY --from=docker.io/tailscale/tailscale:stable /usr/local/bin/tailscaled /app/tailscaled
+COPY --from=docker.io/tailscale/tailscale:stable /usr/local/bin/tailscale /app/tailscale
+RUN mkdir -p /var/run/tailscale /var/cache/tailscale /var/lib/tailscale
+
 ENV NODE_ENV=production
+
+ARG TAILSCALE_AUTHKEY=tailscale_auth_key
+ENV TAILSCALE_AUTHKEY=${TAILSCALE_AUTHKEY}
 
 ARG PORT=8080
 ENV PORT=${PORT}

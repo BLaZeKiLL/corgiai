@@ -92,23 +92,23 @@ services:
     networks:
       - corgi-net
 
-  app:
-    image: corgiai.azurecr.io/corgiai/app:latest
-    build:
-      context: ./apps/corgiai
-    networks:
-      - corgi-net
-    ports:
-      - 8080:8080
-    depends_on:
-      pull-model:
-        condition: service_completed_successfully
-      neo:
-        condition: service_healthy
-    x-develop: # x here is important for some reason
-      watch:
-        - action: rebuild
-          path: ./apps/corgiai
+  # app:
+  #   image: corgiai.azurecr.io/corgiai/app:latest
+  #   build:
+  #     context: ./apps/corgiai
+  #   networks:
+  #     - corgi-net
+  #   ports:
+  #     - 8080:8080
+  #   depends_on:
+  #     pull-model:
+  #       condition: service_completed_successfully
+  #     neo:
+  #       condition: service_healthy
+  #   x-develop: # x here is important for some reason
+  #     watch:
+  #       - action: rebuild
+  #         path: ./apps/corgiai
 
 networks:
   corgi-net:
