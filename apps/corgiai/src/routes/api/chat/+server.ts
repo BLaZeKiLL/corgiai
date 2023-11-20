@@ -8,6 +8,8 @@ import { API_PY_CHAT } from '$env/static/private';
 export async function POST({ request }) {
     const body: ChatRequest = await request.json();
 
+    console.log(`Chat API : ${API_PY_CHAT}`);
+
     const response = await fetch(`${API_PY_CHAT}/query`, {
         method: 'POST',
         headers: {
