@@ -18,6 +18,8 @@ RUN pip install -r requirements.txt
 
 FROM langchain/langchain
 
+WORKDIR /app
+
 COPY --from=builder /venv /venv
 
 ENV PATH=/venv/bin:$PATH
