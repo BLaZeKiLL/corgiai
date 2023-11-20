@@ -10,6 +10,10 @@ using System.Text.Json.Nodes;
 
 namespace SemanticKernel.Ollama
 {
+
+    /// <summary>
+    /// Allows semantic kernel to use models hosted using Ollama as AI Service
+    /// </summary>
     public class OllamaTextCompletion : ITextCompletion
     {
         public IReadOnlyDictionary<string, string> Attributes => _attributes;
@@ -18,6 +22,14 @@ namespace SemanticKernel.Ollama
         private readonly HttpClient _httpClient;
         private readonly ILogger<OllamaTextCompletion> _logger;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model_id">Ollama model to use</param>
+        /// <param name="base_url">Ollama endpoint</param>
+        /// <param name="httpClient">Http client used internally to query ollama api</param>
+        /// <param name="loggerFactory">Logger</param>
         public OllamaTextCompletion(string model_id, string base_url, HttpClient httpClient, ILoggerFactory loggerFactory)
         {
             _attributes.Add("model_id", model_id);
@@ -30,6 +42,13 @@ namespace SemanticKernel.Ollama
         }
 
 
+        /// <summary>
+        /// Generate response using Ollama api
+        /// </summary>
+        /// <param name="text">Prompt</param>
+        /// <param name="requestSettings">Llama2 Settings can be passed as extension data</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async Task<IReadOnlyList<ITextResult>> GetCompletionsAsync(string text, AIRequestSettings? requestSettings = null, CancellationToken cancellationToken = default)
         {
             var data = new
@@ -50,6 +69,13 @@ namespace SemanticKernel.Ollama
         }
 
 
+        /// <summary>
+        /// !NOTE : Haven't tested, Not sure if this works
+        /// </summary>
+        /// <param name="text">Prompt</param>
+        /// <param name="requestSettings">Llama2 Settings can be passed as extension data</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         public async IAsyncEnumerable<ITextStreamingResult> GetStreamingCompletionsAsync(string text, AIRequestSettings? requestSettings = null, CancellationToken cancellationToken = default)
         {
             var data = new
@@ -84,6 +110,10 @@ namespace SemanticKernel.Ollama
         }
 
 
+        /// <summary>
+        /// Pings ollama to see if the required model is running.
+        /// </summary>
+        /// <returns></returns>
         private async Task PingOllama()
         {
             var data = new

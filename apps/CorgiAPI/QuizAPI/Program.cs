@@ -1,11 +1,16 @@
+using QuizAPI.Plugins;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var config = builder.Configuration;
 
+// Add services to the container.
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddSemanticKernel(config);
 
 var app = builder.Build();
 
