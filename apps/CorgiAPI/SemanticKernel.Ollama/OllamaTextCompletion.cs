@@ -8,124 +8,128 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 
 
-namespace SemanticKernel.Ollama
+namespace SemanticKernel.Ollama;
+
+/// <summary>
+/// Allows semantic kernel to use models hosted using Ollama as AI Service
+/// </summary>
+public class OllamaTextCompletion : ITextCompletion
 {
+    public IReadOnlyDictionary<string, string> Attributes => _attributes;
+
+    private Dictionary<string, string> _attributes = new();
+    private readonly HttpClient _httpClient;
+    private readonly ILogger<OllamaTextCompletion> _logger;
+
 
     /// <summary>
-    /// Allows semantic kernel to use models hosted using Ollama as AI Service
+    /// 
     /// </summary>
-    public class OllamaTextCompletion : ITextCompletion
+    /// <param name="model_id">Ollama model to use</param>
+    /// <param name="base_url">Ollama endpoint</param>
+    /// <param name="httpClient">Http client used internally to query ollama api</param>
+    /// <param name="loggerFactory">Logger</param>
+    public OllamaTextCompletion(string model_id, string base_url, HttpClient httpClient, ILoggerFactory loggerFactory)
     {
-        public IReadOnlyDictionary<string, string> Attributes => _attributes;
+        _attributes.Add("model_id", model_id);
+        _attributes.Add("base_url", base_url);
 
-        private Dictionary<string, string> _attributes = [];
-        private readonly HttpClient _httpClient;
-        private readonly ILogger<OllamaTextCompletion> _logger;
+        _httpClient = httpClient;
+        _logger = loggerFactory is not null ? loggerFactory.CreateLogger<OllamaTextCompletion>() : NullLogger<OllamaTextCompletion>.Instance;
+
+        //PingOllama().Wait();
+    }
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="model_id">Ollama model to use</param>
-        /// <param name="base_url">Ollama endpoint</param>
-        /// <param name="httpClient">Http client used internally to query ollama api</param>
-        /// <param name="loggerFactory">Logger</param>
-        public OllamaTextCompletion(string model_id, string base_url, HttpClient httpClient, ILoggerFactory loggerFactory)
+    /// <summary>
+    /// Generate response using Ollama api
+    /// </summary>
+    /// <param name="text">Prompt</param>
+    /// <param name="requestSettings">Llama2 Settings can be passed as extension data</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<IReadOnlyList<ITextResult>> GetCompletionsAsync(string text, AIRequestSettings? requestSettings = null, CancellationToken cancellationToken = default)
+    {
+        var data = new
         {
-            _attributes.Add("model_id", model_id);
-            _attributes.Add("base_url", base_url);
+            model = Attributes["model_id"],
+            prompt = text,
+            stream = false,
+            // options = requestSettings?.ExtensionData,
+            options = new {
+                num_predict = requestSettings.ExtensionData["max_tokens"],
+                temperature = requestSettings.ExtensionData["temperature"],
+                top_p = requestSettings.ExtensionData["top_p"],
+                // penalties
+            }
+        };
 
-            _httpClient = httpClient;
-            _logger = loggerFactory is not null ? loggerFactory.CreateLogger<OllamaTextCompletion>() : NullLogger<OllamaTextCompletion>.Instance;
+        var response = await _httpClient.PostAsJsonAsync($"{Attributes["base_url"]}/api/generate", data, cancellationToken);
 
-            PingOllama().Wait();
-        }
+        response.EnsureSuccessStatusCode();
+
+        var json = JsonSerializer.Deserialize<JsonNode>(await response.Content.ReadAsStringAsync(cancellationToken));
+
+        return new List<ITextResult> { new OllamaTextResult(json!["response"]!.GetValue<string>()) };
+    }
 
 
-        /// <summary>
-        /// Generate response using Ollama api
-        /// </summary>
-        /// <param name="text">Prompt</param>
-        /// <param name="requestSettings">Llama2 Settings can be passed as extension data</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public async Task<IReadOnlyList<ITextResult>> GetCompletionsAsync(string text, AIRequestSettings? requestSettings = null, CancellationToken cancellationToken = default)
+    /// <summary>
+    /// !NOTE : Haven't tested, Not sure if this works
+    /// </summary>
+    /// <param name="text">Prompt</param>
+    /// <param name="requestSettings">Llama2 Settings can be passed as extension data</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async IAsyncEnumerable<ITextStreamingResult> GetStreamingCompletionsAsync(string text, AIRequestSettings? requestSettings = null, CancellationToken cancellationToken = default)
+    {
+        var data = new
         {
-            var data = new
-            {
-                model = Attributes["model_id"],
-                prompt = text,
-                stream = false,
-                options = requestSettings?.ExtensionData,
-            };
+            model = Attributes["model_id"],
+            prompt = text,
+            stream = true,
+            options = requestSettings?.ExtensionData,
+        };
 
-            var response = await _httpClient.PostAsJsonAsync($"{Attributes["base_url"]}/api/generate", data, cancellationToken);
+        var response = await _httpClient.PostAsJsonAsync($"{Attributes["base_url"]}/api/generate", data, cancellationToken);
 
-            response.EnsureSuccessStatusCode();
+        var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
 
-            var json = JsonSerializer.Deserialize<JsonNode>(await response.Content.ReadAsStringAsync(cancellationToken));
-
-            return new List<ITextResult> { new OllamaTextResult(json!["response"]!.GetValue<string>()) };
-        }
-
-
-        /// <summary>
-        /// !NOTE : Haven't tested, Not sure if this works
-        /// </summary>
-        /// <param name="text">Prompt</param>
-        /// <param name="requestSettings">Llama2 Settings can be passed as extension data</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public async IAsyncEnumerable<ITextStreamingResult> GetStreamingCompletionsAsync(string text, AIRequestSettings? requestSettings = null, CancellationToken cancellationToken = default)
+        await using (stream)
         {
-            var data = new
+            using var reader = new StreamReader(stream);
+
+            var done = false;
+
+            while (!done)
             {
-                model = Attributes["model_id"],
-                prompt = text,
-                stream = true,
-                options = requestSettings?.ExtensionData,
-            };
+                var json = JsonSerializer.Deserialize<JsonNode>(
+                    await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false)
+                );
 
-            var response = await _httpClient.PostAsJsonAsync($"{Attributes["base_url"]}/api/generate", data, cancellationToken);
+                done = json!["done"]!.GetValue<bool>();
 
-            var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
-
-            using (stream)
-            {
-                using var reader = new StreamReader(stream);
-
-                var done = false;
-
-                while (!done)
-                {
-                    var json = JsonSerializer.Deserialize<JsonNode>(
-                        await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false)
-                    );
-
-                    done = json!["done"]!.GetValue<bool>();
-
-                    yield return new OllamaTextStreamingResult(json!["response"]!.GetValue<string>());
-                }
+                yield return new OllamaTextStreamingResult(json!["response"]!.GetValue<string>());
             }
         }
+    }
 
 
-        /// <summary>
-        /// Pings ollama to see if the required model is running.
-        /// </summary>
-        /// <returns></returns>
-        private async Task PingOllama()
+    /// <summary>
+    /// Pings ollama to see if the required model is running.
+    /// </summary>
+    /// <returns></returns>
+    private async Task PingOllama()
+    {
+        var data = new
         {
-            var data = new
-            {
-                name = Attributes["model_id"]
-            };
+            name = Attributes["model_id"]
+        };
 
-            var response = await _httpClient.PostAsJsonAsync($"{Attributes["base_url"]}/api/show", data);
+        var response = await _httpClient.PostAsJsonAsync($"{Attributes["base_url"]}/api/show", data);
 
-            response.EnsureSuccessStatusCode();
+        response.EnsureSuccessStatusCode();
 
-            _logger.LogInformation($"Connected to Ollama at {Attributes["base_url"]} with model {Attributes["model_id"]}");
-        }
+        _logger.LogInformation($"Connected to Ollama at {Attributes["base_url"]} with model {Attributes["model_id"]}");
     }
 }

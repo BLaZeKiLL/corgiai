@@ -20,6 +20,15 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+    <Folder Include="Kernels\TextKernel\Skills\" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="Kernels\**\*.json;Kernels\**\*.txt"
+          CopyToOutputDirectory="Always"
+          CopyToPublishDirectory="Always"
+          LinkBase="Kernels\" 
+    />
   </ItemGroup>
 
 </Project>

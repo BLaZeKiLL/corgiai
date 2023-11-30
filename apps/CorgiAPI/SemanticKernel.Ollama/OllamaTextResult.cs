@@ -6,25 +6,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SemanticKernel.Ollama
+namespace SemanticKernel.Ollama;
+
+internal class OllamaTextResult(string result) : ITextResult
 {
-    internal class OllamaTextResult(string result) : ITextResult
-    {
-        public ModelResult ModelResult => new(result);
+    public ModelResult ModelResult => new(result);
 
-        public Task<string> GetCompletionAsync(CancellationToken cancellationToken = default)
-        {
-            return Task.FromResult(result);
-        }
+    public Task<string> GetCompletionAsync(CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult(result);
     }
+}
 
-    internal class OllamaTextStreamingResult(string result) : ITextStreamingResult
+internal class OllamaTextStreamingResult(string result) : ITextStreamingResult
+{
+    public ModelResult ModelResult => new(result);
+
+    public async IAsyncEnumerable<string> GetCompletionStreamingAsync(CancellationToken cancellationToken = default)
     {
-        public ModelResult ModelResult => new(result);
-
-        public async IAsyncEnumerable<string> GetCompletionStreamingAsync(CancellationToken cancellationToken = default)
-        {
-            yield return result;
-        }
+        yield return result;
     }
 }

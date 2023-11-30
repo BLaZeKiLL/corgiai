@@ -4,30 +4,30 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.SemanticKernel;
 using SemanticKernel.Ollama;
 
-namespace PromtMaker
+namespace PromtMaker;
+
+internal class PromptMaker(IKernel kernel, ILoggerFactory? loggerFactory) : IHostedService
 {
-    internal class PromptMaker(IKernel kernel, ILoggerFactory? loggerFactory) : IHostedService
+    private readonly IKernel _kernel = kernel;
+    private readonly ILogger<PromptMaker> _logger = loggerFactory is not null ? loggerFactory.CreateLogger<PromptMaker>() : NullLogger<PromptMaker>.Instance;
+
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
-        private readonly IKernel _kernel = kernel;
-        private readonly ILogger<PromptMaker> _logger = loggerFactory is not null ? loggerFactory.CreateLogger<PromptMaker>() : NullLogger<PromptMaker>.Instance;
+        _logger.LogInformation("Prompt Maker Started");
 
-        public async Task StartAsync(CancellationToken cancellationToken)
-        {
-            _logger.LogInformation("Prompt Maker Started");
+        await BasicPrompt();
+    }
 
-            await BasicPrompt();
-        }
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Prompt Maker Done");
 
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            _logger.LogInformation("Prompt Maker Done");
+        return Task.CompletedTask;
+    }
 
-            return Task.CompletedTask;
-        }
-
-        private async Task BasicPrompt()
-        {
-            string prompt = @"
+    private async Task BasicPrompt()
+    {
+        string prompt = @"
                 Bot: How can I help you?
                 User: {{$input}}
 
@@ -36,14 +36,13 @@ namespace PromtMaker
                 The intent of the user in 5 words or less: 
             ";
 
-            var skfn = _kernel.CreateSemanticFunction(prompt, functionName: "GetIntent", pluginName: "Basic");
+        var skfn = _kernel.CreateSemanticFunction(prompt, functionName: "GetIntent", pluginName: "Basic");
 
-            var result = await _kernel.RunAsync(
-                "I want to send an email to the marketing team celebrating their recent milestone.",
-                skfn
-            );
+        var result = await _kernel.RunAsync(
+            "I want to send an email to the marketing team celebrating their recent milestone.",
+            skfn
+        );
 
-            _logger.LogInformation(result.ToString());
-        }
+        _logger.LogInformation(result.ToString());
     }
 }
