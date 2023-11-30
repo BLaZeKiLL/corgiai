@@ -22,4 +22,11 @@ public class TextKernel
 
         return result.GetValue<string>();
     }
+
+    public async Task<string> Question(string question)
+    {
+        var result = await _Kernel.RunAsync(question, _Functions["Question"]);
+
+        return result.GetValue<string>();
+    }
 }

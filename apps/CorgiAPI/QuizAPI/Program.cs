@@ -15,7 +15,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddNeo4j(config);
 builder.Services.AddSemanticKernel(config);
 
-builder.Services.AddCorgiKernels();
+builder.Services.AddQuizAPIKernels();
 
 var app = builder.Build();
 

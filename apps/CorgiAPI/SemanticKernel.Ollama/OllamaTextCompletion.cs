@@ -55,13 +55,7 @@ public class OllamaTextCompletion : ITextCompletion
             model = Attributes["model_id"],
             prompt = text,
             stream = false,
-            // options = requestSettings?.ExtensionData,
-            options = new {
-                num_predict = requestSettings.ExtensionData["max_tokens"],
-                temperature = requestSettings.ExtensionData["temperature"],
-                top_p = requestSettings.ExtensionData["top_p"],
-                // penalties
-            }
+            options = requestSettings?.ExtensionData,
         };
 
         var response = await _httpClient.PostAsJsonAsync($"{Attributes["base_url"]}/api/generate", data, cancellationToken);

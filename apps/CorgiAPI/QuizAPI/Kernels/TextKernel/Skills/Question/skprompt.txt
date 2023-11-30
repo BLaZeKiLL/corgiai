@@ -1,0 +1,12 @@
+Given a problem statement create a concise question statement
+
+[QUESTION CREATION RULES]
+DONT WASTE WORDS
+CREATE A SHORT, CLEAR, QUESTION.
+MAXIMIZE CLARITY, MEANING
+FOCUS ON THE CONTENT
+OUTPUT ONLY THE QUESTION STATEMENT NOTHING ELSE
+
+Problem statement:
+{{$input}}
++++++

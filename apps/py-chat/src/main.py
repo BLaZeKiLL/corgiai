@@ -74,8 +74,6 @@ def question_query(question: Question):
 
     chain = get_chain(question.site)
 
-    chain_time = time.time()
-
     result = chain({
         "question": question.text,
         "chat_history": []
@@ -84,9 +82,7 @@ def question_query(question: Question):
     end_time = time.time()
 
     return {
-        "status": "sucess",
         "model": llm_name,
-        "chain_duration": end_time - chain_time,
         "duration": end_time - start_time,
         "text": result["answer"]
     }

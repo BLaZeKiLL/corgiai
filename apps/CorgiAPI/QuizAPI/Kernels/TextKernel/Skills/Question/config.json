@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "type": "completion",
-  "description": "Summarize given text",
+  "description": "Summarize given question",
   "completion": {
     "num_predict": 512,
     "temperature": 0.8,
@@ -12,7 +12,7 @@
     "parameters": [
       {
         "name": "input",
-        "description": "Text to summarize",
+        "description": "Question to summarize",
         "defaultValue": ""
       }
     ]

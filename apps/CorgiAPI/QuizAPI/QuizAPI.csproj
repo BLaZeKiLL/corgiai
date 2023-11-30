@@ -17,11 +17,6 @@
   <ItemGroup>
     <ProjectReference Include="..\SemanticKernel.Ollama\SemanticKernel.Ollama.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Kernels\TextKernel\Skills\" />
-  </ItemGroup>
   
   <ItemGroup>
     <None Include="Kernels\**\*.json;Kernels\**\*.txt"

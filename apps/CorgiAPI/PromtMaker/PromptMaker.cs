@@ -8,8 +8,9 @@ namespace PromtMaker;
 
 internal class PromptMaker(IKernel kernel, ILoggerFactory? loggerFactory) : IHostedService
 {
-    private readonly IKernel _kernel = kernel;
-    private readonly ILogger<PromptMaker> _logger = loggerFactory is not null ? loggerFactory.CreateLogger<PromptMaker>() : NullLogger<PromptMaker>.Instance;
+    private readonly ILogger<PromptMaker> _logger = loggerFactory is not null
+        ? loggerFactory.CreateLogger<PromptMaker>()
+        : NullLogger<PromptMaker>.Instance;
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
@@ -27,20 +28,20 @@ internal class PromptMaker(IKernel kernel, ILoggerFactory? loggerFactory) : IHos
 
     private async Task BasicPrompt()
     {
-        string prompt = @"
-                Bot: How can I help you?
-                User: {{$input}}
+        const string prompt = """
+        Bot: How can I help you?
+        User: {{$input}}
+                              
+        ---------------------------------------------
+                              
+        The intent of the user in 5 words or less:
+        """;
 
-                ---------------------------------------------
+        var function = kernel.CreateSemanticFunction(prompt, functionName: "GetIntent", pluginName: "Basic");
 
-                The intent of the user in 5 words or less: 
-            ";
-
-        var skfn = _kernel.CreateSemanticFunction(prompt, functionName: "GetIntent", pluginName: "Basic");
-
-        var result = await _kernel.RunAsync(
+        var result = await kernel.RunAsync(
             "I want to send an email to the marketing team celebrating their recent milestone.",
-            skfn
+            function
         );
 
         _logger.LogInformation(result.ToString());

@@ -12,10 +12,11 @@ public static class SemanticKernelServiceExtensions
             var log_factory = provider.GetRequiredService<ILoggerFactory>();
 
             var builder = new KernelBuilder();
-
+            
             var model = config.GetValue<string>("Ollama:Model") ?? throw new InvalidDataException("Ollama model not specified");
             var baseUrl = config.GetValue<string>("Ollama:BaseUrl") ?? throw new InvalidDataException("Ollama url not specified");
 
+            builder.WithLoggerFactory(log_factory);
             builder.WithOllamaTextCompletionService(model, baseUrl, http.CreateClient());
 
             return builder.Build();
@@ -24,7 +25,7 @@ public static class SemanticKernelServiceExtensions
         return services;
     }
 
-    public static IServiceCollection AddCorgiKernels(this IServiceCollection services)
+    public static IServiceCollection AddQuizAPIKernels(this IServiceCollection services)
     {
         services.AddSingleton<TextKernel.TextKernel>();
 
