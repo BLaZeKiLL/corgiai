@@ -6,7 +6,7 @@ public static class Neo4jServiceExtensions
 {
     public static IServiceCollection AddNeo4j(this IServiceCollection services, IConfiguration config)
     {
-        services.AddTransient(_ => GraphDatabase.Driver(
+        services.AddScoped<IDriver>(_ => GraphDatabase.Driver(
             config.GetValue<string>("Neo4j:Url"), 
             AuthTokens.Basic(
                 config.GetValue<string>("Neo4j:Username"), 

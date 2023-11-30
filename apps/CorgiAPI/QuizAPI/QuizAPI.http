@@ -1,6 +1,14 @@
-@QuizAPI_HostAddress = http://localhost:5128
+@QuizAPI = http://localhost:5000
 
-GET {{QuizAPI_HostAddress}}/weatherforecast/
-Accept: application/json
+### Question
+POST {{QuizAPI}}/api/Prompt/question
+Content-Type: application/json
+
+{ 
+  "text": "Proof that Statistical Mechanics is a model of Themodynamics\nThe [laws of thermodynamics](http://en.wikipedia.org/wiki/Laws_of_thermodynamics) are essentially four axioms of a mathematical theory.\r\n\r\nThe expectation values of a [statistical ensemble](http://en.wikipedia.org/wiki/Statistical_ensemble_%28mathematical_physics%29) are supposed to satisfy the axioms of thermodynamics (under the assumption that the [ergodic hypothesis](http://en.wikipedia.org/wiki/Ergodic_hypothesis) holds).\r\n\r\n**How is it proved that statistical mechanics satisfies the axioms of thermodynamics?**\r\n\r\nThe question is important to me because the abstract theory of thermodynamics is used to develop things like the Maxwell relations, which are then applied to statistical mechanics ensembles. For this to give valid results it statistical mechanics must be a model of thermodynamics. I would appreciate pointers to proofs of this and references if you have any. Thanks a lot."
+}
+###
+
+###
 
 ###
