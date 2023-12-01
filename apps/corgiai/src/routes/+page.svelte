@@ -18,7 +18,7 @@
     }
 </script>
 
-<main class="p-4 sm:p-16 grow flex flex-col place-content-center items-center">
+<main class="h-full p-4 sm:p-16 flex flex-col place-content-center items-center">
     {#if !start}
         <span transition:fade on:outroend={() => ready = true}>
             <Title />

@@ -2,24 +2,4 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ===== Scrollbar CSS ===== */
-/* Firefox */
-* {
-  scrollbar-width: auto;
-  scrollbar-color: #3b82f6 #00000000;
-}
-
-/* Chrome, Edge, and Safari */
-*::-webkit-scrollbar {
-  width: 4px;
-}
-
-*::-webkit-scrollbar-track {
-  background: #00000000; /* Transparent */
-}
-
-*::-webkit-scrollbar-thumb {
-  background-color: #3b82f6;
-  border-radius: 2px;
-  border: 1px none #ffffff;
-}
+html, body { @apply h-full overflow-hidden; }
