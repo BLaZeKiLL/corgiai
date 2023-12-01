@@ -13,6 +13,7 @@ component = "generate"
 [component.generate]
 source = "generate/target/wasm32-wasi/release/generate.wasm"
 allowed_outbound_hosts = []
+ai_models = ["llama2-chat"]
 
 [component.generate.build]
 command = "cargo build --target wasm32-wasi --release"
