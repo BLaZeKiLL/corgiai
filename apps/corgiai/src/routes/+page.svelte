@@ -31,7 +31,7 @@
 
     <span class="grow"></span>
 
-    <button class="btn btn-xl variant-filled-primary">Start</button>
+    <a href="/app" class="btn btn-xl variant-filled-primary">Start</a>
 
     <!-- <UserInput on:start={() => start = true} on:changemode={changemode}/> -->
 </main>
