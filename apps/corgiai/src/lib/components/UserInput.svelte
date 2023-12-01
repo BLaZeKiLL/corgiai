@@ -42,7 +42,7 @@
 	<div class="w-full flex flex-row">
 		<select
 			bind:value={site}
-			class="rounded-md bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-white border-slate-200 dark:border-slate-950"
+			class="select w-auto"
 		>
 			<option value="stackoverflow">Programming</option>
 			<option value="math">Math</option>
@@ -60,7 +60,7 @@
 		<select
 			bind:value={mode}
 			on:change={changemode}
-			class="rounded-md bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-white border-slate-200 dark:border-slate-950"
+			class="select w-auto"
 		>
 			<option value="chat">Chat</option>
 			<option value="quiz">Quiz</option>
@@ -70,11 +70,12 @@
 	<div class="w-full relative">
 		<input
 			bind:value={question}
+			type="text"
 			placeholder="How can I help you?"
-			class="block w-full rounded-md bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-white border-slate-200 dark:border-slate-950"
+			class="block w-full input"
 		/>
 
-		<button type="submit" class="absolute top-0 end-0 p-2.5 h-full text-white bg-blue-600 rounded-e-lg">
+		<button type="submit" class="absolute top-0 end-0 p-2.5 h-full">
 			<SendHorizontal />
 		</button>
 	</div>

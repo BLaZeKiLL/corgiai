@@ -18,7 +18,7 @@
     }
 </script>
 
-<div class="grow flex flex-col place-content-center items-center">
+<main class="p-4 sm:p-16 grow flex flex-col place-content-center items-center">
     {#if !start}
         <span transition:fade on:outroend={() => ready = true}>
             <Title />
@@ -31,5 +31,7 @@
 
     <span class="grow"></span>
 
-    <UserInput on:start={() => start = true} on:changemode={changemode}/>
-</div>
+    <button class="btn btn-xl variant-filled-primary">Start</button>
+
+    <!-- <UserInput on:start={() => start = true} on:changemode={changemode}/> -->
+</main>
