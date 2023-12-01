@@ -1,13 +1,13 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using QuizAPI.Kernels.TextKernel;
+using QuizAPI.Kernels.QuizKernel;
 using QuizAPI.Models;
 
 namespace QuizAPI.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class PromptController(TextKernel _TextKernel, IConfiguration _Config) : ControllerBase
+public class PromptController(QuizKernel _QuizKernel, IConfiguration _Config) : ControllerBase
 {
     private readonly string _Model = _Config.GetValue<string>("Ollama:Model");
     
@@ -18,7 +18,7 @@ public class PromptController(TextKernel _TextKernel, IConfiguration _Config) : 
         
         stopwatch.Start();
         
-        var result = await _TextKernel.Summarize(request.Text);
+        var result = await _QuizKernel.Summarize(request.Text);
         
         stopwatch.Stop();
         
@@ -31,19 +31,19 @@ public class PromptController(TextKernel _TextKernel, IConfiguration _Config) : 
     }
 
     [HttpPost("question")]
-    public async Task<ActionResult<TextResponse>> QuestionPrompt(TextRequest request)
+    public async Task<ActionResult<QuizQuestionResponse>> QuestionPrompt(QuizQuestionRequest request)
     {
         var stopwatch = new Stopwatch();
         
         stopwatch.Start();
 
-        var result = await _TextKernel.Question(request.Text);
+        var result = await _QuizKernel.Question(request.Question, request.Answer);
         
         stopwatch.Stop();
 
-        return Ok(new TextResponse
+        return Ok(new QuizQuestionResponse
         {
-            Text = result,
+            Result = result,
             Model = _Model,
             Duration = stopwatch.Elapsed.TotalSeconds
         });

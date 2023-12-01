@@ -11,7 +11,7 @@
   "input": {
     "parameters": [
       {
-        "name": "input",
+        "name": "$question_original",
         "description": "Question to summarize",
         "defaultValue": ""
       }

@@ -8,5 +8,5 @@ FOCUS ON THE CONTENT
 OUTPUT ONLY THE QUESTION STATEMENT NOTHING ELSE
 
 Problem statement:
-{{$input}}
+{{$question_original}}
 +++++

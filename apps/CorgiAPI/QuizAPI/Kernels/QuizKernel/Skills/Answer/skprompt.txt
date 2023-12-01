@@ -1,0 +1,12 @@
+Given a question and a long answer, summarize the answer while ensuring it's correct
+
+[ANSWER SUMMARIZATION RULES]
+DONT WASTE WORDS
+CREATE A SHORT, CLEAR, QUESTION.
+MAXIMIZE CLARITY, MEANING
+FOCUS ON THE CONTENT
+OUTPUT ONLY THE ANSWER STATEMENT NOTHING ELSE
+
+question: {{$question}}
+long answer: {{$answer_original}}
++++++

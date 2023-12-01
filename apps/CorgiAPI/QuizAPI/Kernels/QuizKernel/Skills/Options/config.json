@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "type": "completion",
+  "description": "Summarize given question",
+  "completion": {
+    "num_predict": 512,
+    "temperature": 0.8,
+    "top_p": 0.9,
+    "repeat_penalty": 1.1
+  },
+  "input": {
+    "parameters": [
+      {
+        "name": "question",
+        "description": "Question statement",
+        "defaultValue": ""
+      },
+      {
+        "name": "answer",
+        "description": "Correct answer to the question",
+        "defaultValue": ""
+      }
+    ]
+  }
+}

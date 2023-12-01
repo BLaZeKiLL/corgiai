@@ -27,7 +27,7 @@ public static class SemanticKernelServiceExtensions
 
     public static IServiceCollection AddQuizAPIKernels(this IServiceCollection services)
     {
-        services.AddSingleton<TextKernel.TextKernel>();
+        services.AddSingleton<QuizKernel.QuizKernel>();
 
         return services;
     }
