@@ -1,0 +1,33 @@
+spin_manifest_version = 2
+
+# General identification information
+[application]
+name = "corgiai-llm"
+version = "1.0.0"
+description = "Ollama API"
+
+[[trigger.http]]
+route = "/api/generate"
+component = "generate"
+
+[component.generate]
+source = "generate/target/wasm32-wasi/release/generate.wasm"
+allowed_outbound_hosts = []
+
+[component.generate.build]
+command = "cargo build --target wasm32-wasi --release"
+workdir = "generate"
+watch = ["src/**/*.rs", "Cargo.toml"]
+
+[[trigger.http]]
+route = "/api/embeddings"
+component = "embeddings"
+
+[component.embeddings]
+source = "embeddings/target/wasm32-wasi/release/embeddings.wasm"
+allowed_outbound_hosts = []
+
+[component.embeddings.build]
+command = "cargo build --target wasm32-wasi --release"
+workdir = "embeddings"
+watch = ["src/**/*.rs", "Cargo.toml"]
