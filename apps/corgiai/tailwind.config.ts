@@ -6,7 +6,7 @@ import { skeleton } from '@skeletonlabs/tw-plugin';
 
 const config = {
 	// 2. Opt for dark mode to be handled via the class method
-	darkMode: 'media',
+	darkMode: 'class',
 	content: [
 		'./src/**/*.{html,js,svelte,ts}',
     // join(require.resolve('flowbite-svelte'),'../**/*.{html,js,svelte,ts}'),
@@ -14,11 +14,11 @@ const config = {
 		join(require.resolve('@skeletonlabs/skeleton'),'../**/*.{html,js,svelte,ts}')
 	],
 	theme: {
-    extend: {
-      fontFamily: {
-        sans: ['Inter', 'system-ui', 'Avenir', 'Helvetica', 'Arial', 'sans-serif']
-      }
-    },
+		// extend: {
+		// 	fontFamily: {
+		// 		sans: ['Inter', 'system-ui', 'Avenir', 'Helvetica', 'Arial', 'sans-serif']
+		// 	}
+		// },
 	},
 	plugins: [
     require('@tailwindcss/forms'),

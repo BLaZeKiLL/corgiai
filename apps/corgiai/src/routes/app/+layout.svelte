@@ -1,18 +1,32 @@
 <script lang="ts">
-    import { AppShell, AppBar } from '@skeletonlabs/skeleton';
+    import { AppShell } from '@skeletonlabs/skeleton';
+
+	import CorgiAppBar from '$lib/components/layout/CorgiAppBar.svelte';
+	import CorgiSideBar from '$lib/components/layout/CorgiAppSideBar.svelte';
+	import CorgiAppFooter from '$lib/components/layout/CorgiAppFooter.svelte';
 </script>
 
 <AppShell>
 	<svelte:fragment slot="header">
-		<AppBar>Skeleton</AppBar>
+		<CorgiAppBar />
 	</svelte:fragment>
 
-    <svelte:fragment slot="sidebarLeft">Sidebar Left</svelte:fragment>
+    <svelte:fragment slot="sidebarLeft">
+        <CorgiSideBar />
+    </svelte:fragment>
 
-    <svelte:fragment slot="pageHeader">Page Header</svelte:fragment>
+    <!-- <svelte:fragment slot="pageHeader">Page Header</svelte:fragment> -->
 
-    <slot />
+    <!-- <div class="w-full h-full max-w-7xl mx-auto p-4 py-16 space-y-10"> -->
+        <slot />
+    <!-- </div> -->
 
-    <svelte:fragment slot="pageFooter">Page Footer</svelte:fragment>
+    <!-- <svelte:fragment slot="pageFooter">
+        <CorgiAppFooter />
+    </svelte:fragment> -->
 
 </AppShell>
+
+<style>
+
+</style>

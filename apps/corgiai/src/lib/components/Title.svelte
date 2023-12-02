@@ -19,8 +19,11 @@
   
   <div class="mt-8 sm:mt-32 flex flex-col place-content-center items-center gap-y-4">
     <h1 class="h1">Corgi AI</h1>
-    <p class="text-surface-500 dark:text-surface-400">
+    <p class="text-surface-500">
       {mode}
+    </p>
+    <p class="text-sm text-surface-500">
+      Corgi dog by Mat fine from <a href="https://thenounproject.com/browse/icons/term/corgi-dog/" class="anchor" target="_blank" title="corgi dog Icons">Noun Project</a> (CC BY 3.0)
     </p>
   </div>
 </div>

@@ -88,6 +88,10 @@ function createChatStore() {
         }
     }
 
+    // for (let index = 0; index < 10; index++) {
+    //     addMessage('user', `message ${index}`);
+    // }
+
     return {
         subscribe,
         send
