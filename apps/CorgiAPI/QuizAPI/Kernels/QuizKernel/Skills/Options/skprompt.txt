@@ -1,13 +1,14 @@
-Given a question and a correct answer create 3 wrong answer statements
+Given a question and a correct answer create wrong answer statements
 
 [WRONG ANSWER CREATION RULES]
 DONT WASTE WORDS
-CREATE A SHORT, CLEAR, QUESTION.
+CREATE SHORT, CLEAR, STATEMENTS.
 MAXIMIZE CLARITY, MEANING
 FOCUS ON THE CONTENT
 CREATE 3 WRONG ANSWER STATEMENTS
-OUTPUT ONLY THE WRONG ANSWER STATEMENTS NOTHING ELSE
+OUTPUT JUST STATEMENTS NOTHING ELSE
 
++++++
 question: {{$question}}
 answer: {{$answer}}
 +++++

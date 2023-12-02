@@ -1,4 +1,5 @@
 ﻿using Neo4j.Driver;
+using QuizAPI.Neo4j.Repositories;
 
 namespace QuizAPI.Neo4j;
 
@@ -13,6 +14,14 @@ public static class Neo4jServiceExtensions
                 config.GetValue<string>("Neo4j:Password")
             )
         ));
+
+        return services;
+    }
+
+    public static IServiceCollection AddQuizApiRepositories(this IServiceCollection services)
+    {
+        services.AddScoped<ITopicRepository, TopicRepository>();
+        services.AddScoped<IQuestionRepository, QuestionRepository>();
 
         return services;
     }

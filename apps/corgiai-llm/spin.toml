@@ -3,7 +3,7 @@ spin_manifest_version = 2
 # General identification information
 [application]
 name = "corgiai-llm"
-version = "1.0.0"
+version = "1.0.2"
 description = "Ollama API"
 
 [[trigger.http]]
@@ -11,7 +11,7 @@ route = "/api/generate"
 component = "generate"
 
 [component.generate]
-source = "generate/target/wasm32-wasi/release/generate.wasm"
+source = "target/wasm32-wasi/release/generate.wasm"
 allowed_outbound_hosts = []
 ai_models = ["llama2-chat"]
 
@@ -25,7 +25,7 @@ route = "/api/embeddings"
 component = "embeddings"
 
 [component.embeddings]
-source = "embeddings/target/wasm32-wasi/release/embeddings.wasm"
+source = "target/wasm32-wasi/release/embeddings.wasm"
 allowed_outbound_hosts = []
 
 [component.embeddings.build]

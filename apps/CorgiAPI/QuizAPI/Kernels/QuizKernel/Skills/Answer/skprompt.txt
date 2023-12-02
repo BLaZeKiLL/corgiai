@@ -1,11 +1,12 @@
-Given a question and a long answer, summarize the answer while ensuring it's correct
+Given a question and a long answer, create an answer statement while ensuring it's correct
 
-[ANSWER SUMMARIZATION RULES]
+[ANSWER CREATION RULES]
 DONT WASTE WORDS
-CREATE A SHORT, CLEAR, QUESTION.
+CREATE A SHORT, CLEAR, ANSWER STATEMENT.
 MAXIMIZE CLARITY, MEANING
 FOCUS ON THE CONTENT
-OUTPUT ONLY THE ANSWER STATEMENT NOTHING ELSE
+DONT EXPLAIN OR MENTION THE ANSWER STATEMENT
+OUTPUT ONLY THE ANSWER STATEMENT STATEMENT NOTHING ELSE
 
 question: {{$question}}
 long answer: {{$answer_original}}

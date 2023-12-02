@@ -16,7 +16,7 @@ public class QuizKernel
     {
         _Kernel = kernel;
 
-        var path = Path.Combine(AppContext.BaseDirectory, "Kernels", "TextKernel");
+        var path = Path.Combine(AppContext.BaseDirectory, "Kernels", "QuizKernel");
 
         _Skills = _Kernel.ImportSemanticFunctionsFromDirectory(path, "Skills");
         _Utils = _Kernel.ImportFunctions(new QuizUtils(), "Utils");

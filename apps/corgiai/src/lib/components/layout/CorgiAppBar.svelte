@@ -1,12 +1,13 @@
 <script lang="ts">
     import { AppBar, LightSwitch } from '@skeletonlabs/skeleton';
-	import { Github, Youtube } from 'lucide-svelte';
+	import { Github, PawPrint, Youtube } from 'lucide-svelte';
 </script>
 
 <AppBar shadow="shadow-2xl">
     <svelte:fragment slot="lead">
-        CorgiAI
+        <PawPrint size={48} />
     </svelte:fragment>
+    <h2 class="h2">Corgi AI</h2>
     <svelte:fragment slot="trail">
         <section class="hidden sm:flex flex-row place-content-center items-center space-x-1">
             <LightSwitch />

@@ -36,8 +36,6 @@ public class OllamaTextCompletion : ITextCompletion
 
         _httpClient = httpClient;
         _logger = loggerFactory is not null ? loggerFactory.CreateLogger<OllamaTextCompletion>() : NullLogger<OllamaTextCompletion>.Instance;
-
-        //PingOllama().Wait();
     }
 
 

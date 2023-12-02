@@ -5,12 +5,15 @@ public class QuizQuestion
     public string Question { get; set; }
     public string Answer { get; set; }
     public string[] Options { get; set; }
+    public string Source { get; set; }
 }
 
 public class QuizQuestionRequest
 {
     public string Question { get; set; }
     public string Answer { get; set; }
+    
+    public string Source { get; set; }
 }
 
 public class QuizQuestionResponse : LLMResponseBase
