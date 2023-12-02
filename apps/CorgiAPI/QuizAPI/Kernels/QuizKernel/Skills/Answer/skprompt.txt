@@ -8,6 +8,9 @@ FOCUS ON THE CONTENT
 DONT EXPLAIN OR MENTION THE ANSWER STATEMENT
 OUTPUT ONLY THE ANSWER STATEMENT STATEMENT NOTHING ELSE
 
-question: {{$question}}
-long answer: {{$answer_original}}
+question: 
+{{$question}}
++++++
+long answer: 
+{{$answer_original}}
 +++++

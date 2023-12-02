@@ -10,6 +10,8 @@ namespace QuizAPI.Kernels.QuizKernel;
 [SuppressMessage("ReSharper", "UnusedMember.Global")]
 public class QuizUtils
 {
+    private static readonly string[] ANSWER_PREFIXES = {"ANS1:", "ANS2:", "ANS3:"};
+
     [SKFunction, Description("Renames the input variable to question")]
     public static SKContext RenameQuestionOutput(SKContext context)
     {
@@ -32,12 +34,18 @@ public class QuizUtils
         var question = context.Variables["question"];
         var answer = context.Variables["answer"];
         var options = context.Variables["input"];
+        
+        
 
         var result = new QuizQuestion
         {
             Question = question,
             Answer = answer,
-            Options = options.Split("\n")
+            Options = options
+                .Split("\n")
+                .Where(x => ANSWER_PREFIXES.Any(x.StartsWith))
+                .Select(x => x[6..])
+                .ToArray()
         };
 
         context.Variables["input"] = JsonSerializer.Serialize(result);

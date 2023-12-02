@@ -4,7 +4,7 @@
   "description": "Summarize given question",
   "completion": {
     "num_predict": 512,
-    "temperature": 0.8,
+    "temperature": 0.5,
     "top_p": 0.9,
     "repeat_penalty": 1.1
   },
