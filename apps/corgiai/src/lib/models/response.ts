@@ -1,4 +1,4 @@
-import type { Tag } from "./models";
+import type { Topic } from "./models";
 
 export interface ChatResponse {
     status: string;
@@ -8,6 +8,6 @@ export interface ChatResponse {
     text: string;
 }
 
-export interface TagsResponse {
-    tags: Tag[];
+export interface TopicsResponse {
+    topics: Topic[];
 }

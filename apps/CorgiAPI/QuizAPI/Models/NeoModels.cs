@@ -1,12 +1,12 @@
 namespace QuizAPI.Models;
 
-public class Tag
+public class Topic
 {
     public string Value { get; set; }
     public int Count { get; set; }
 }
 
-public class TagResponse
+public class TopicsResponse
 {
-    public IEnumerable<Tag> Tags { get; set; }
+    public IEnumerable<Topic> Topics { get; set; }
 }

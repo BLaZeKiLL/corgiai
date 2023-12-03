@@ -21,11 +21,11 @@
 	<div class="w-full flex flex-row">
 		<select
 			bind:value={site}
-			class="select w-auto left-border-radius"
+			class="select w-auto left-border-radius text-center"
 		>
-			<option value="stackoverflow">Programming</option>
 			<option value="math">Math</option>
 			<option value="physics">Physics</option>
+			<option value="stackoverflow">Programming</option>
 		</select>
 
 		<span class="grow relative">

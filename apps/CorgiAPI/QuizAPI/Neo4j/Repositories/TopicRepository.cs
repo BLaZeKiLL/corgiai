@@ -5,12 +5,12 @@ namespace QuizAPI.Neo4j.Repositories;
 
 public interface ITopicRepository
 {
-    public Task<IEnumerable<Tag>> GetAllTags(int threshold);
+    public Task<IEnumerable<Topic>> GetAllTags(int threshold);
 }
 
 public class TopicRepository(IDriver Driver) : ITopicRepository
 {
-    public async Task<IEnumerable<Tag>> GetAllTags(int threshold)
+    public async Task<IEnumerable<Topic>> GetAllTags(int threshold)
     {
         await using var session = Driver.AsyncSession();
 
@@ -27,7 +27,7 @@ public class TopicRepository(IDriver Driver) : ITopicRepository
                 new {threshold}
             );
 
-            return await cursor.ToListAsync(record => new Tag
+            return await cursor.ToListAsync(record => new Topic
             {
                 Value = record["tag.name"].As<string>(),
                 Count = record["qcount"].As<int>()

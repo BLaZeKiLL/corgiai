@@ -9,7 +9,7 @@
     <div class="flex-1 pt-8 overflow-y-auto">
         <Chat />
     </div>
-    <div class="w-full max-w-7xl mx-auto p-8 space-y-10">
+    <div class="w-full max-w-7xl mx-auto p-8 mb-8 space-y-10">
         <UserInput />
     </div>
 </div>

@@ -9,11 +9,11 @@ namespace QuizAPI.Controllers;
 public class NeoController(ITopicRepository TopicRepository, IQuestionRepository QuestionRepository) : ControllerBase
 {
     [HttpGet("/topics")]
-    public async Task<ActionResult<TagResponse>> GetAllTopics([FromQuery] int threshold = 100)
+    public async Task<ActionResult<TopicsResponse>> GetAllTopics([FromQuery] int threshold = 100)
     {
-        return Ok(new TagResponse
+        return Ok(new TopicsResponse
         {
-            Tags = await TopicRepository.GetAllTags(threshold)
+            Topics = await TopicRepository.GetAllTags(threshold)
         });
     }
 

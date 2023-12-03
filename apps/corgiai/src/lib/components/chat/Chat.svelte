@@ -1,10 +1,9 @@
 <script lang="ts">
   import { tick } from 'svelte';
-
+	import { ProgressBar } from '@skeletonlabs/skeleton';
   import SvelteMarkdown from 'svelte-markdown';
   
   import { chatStore } from '$lib/store/chat.store';
-	import { ProgressBar } from '@skeletonlabs/skeleton';
 
   const mathjax = async () => {
     await tick();
@@ -61,5 +60,5 @@
     bottom: 0;
     background: linear-gradient(white, transparent);
   }
-  </style>
+</style>
   
