@@ -4,3 +4,10 @@ export interface Topic
     value: string;
     count: number;
 }
+
+export enum QuizMode
+{
+    START,
+    QUIZ,
+    REPORT
+}
