@@ -28,8 +28,7 @@ ENV PORT=${PORT}
 ARG HOST=0.0.0.0
 ENV HOST=${HOST}
 
-# Will need to change this so that correct config is loaded but for now swagger runs only on Development
-ARG MODE="Development"
+ARG MODE="Production"
 ENV ASPNETCORE_ENVIRONMENT=${MODE}
 
 ENV ASPNETCORE_URLS=http://${HOST}:${PORT}/

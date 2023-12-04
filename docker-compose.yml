@@ -55,10 +55,6 @@ services:
         condition: service_completed_successfully
       neo:
         condition: service_healthy
-    x-develop: # x here is important for some reason
-      watch:
-        - action: rebuild
-          path: ./apps/py-loader
 
   py-chat:
     image: corgiai.azurecr.io/corgiai/py-chat:latest
@@ -77,10 +73,23 @@ services:
         condition: service_completed_successfully
       neo:
         condition: service_healthy
-    x-develop: # x here is important for some reason
-      watch:
-        - action: rebuild
-          path: ./apps/py-chat
+
+  quiz-api:
+    image: corgiai.azurecr.io/corgiai/quiz-api:latest
+    build:
+      context: ./apps/CorgiAPI
+      dockerfile: ./apps/CorgiAPI/QuizAPI/Dockerfile
+      additional_contexts:
+        config: ./config
+    networks:
+      - corgi-net
+    ports:
+      - 8300:8300
+    depends_on:
+      pull-model:
+        condition: service_completed_successfully
+      neo:
+        condition: service_healthy
   
   pull-model:
     image: corgiai.azurecr.io/corgiai/pull-model:latest
@@ -106,10 +115,6 @@ services:
         condition: service_completed_successfully
       neo:
         condition: service_healthy
-    x-develop: # x here is important for some reason
-      watch:
-        - action: rebuild
-          path: ./apps/corgiai
 
 networks:
   corgi-net:
