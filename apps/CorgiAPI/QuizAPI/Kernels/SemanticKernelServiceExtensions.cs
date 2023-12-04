@@ -14,10 +14,12 @@ public static class SemanticKernelServiceExtensions
             var builder = new KernelBuilder();
             
             var model = config.GetValue<string>("Ollama:Model") ?? throw new InvalidDataException("Ollama model not specified");
-            var baseUrl = config.GetValue<string>("Ollama:BaseUrl") ?? throw new InvalidDataException("Ollama url not specified");
+            var baseUrlCompletion = config.GetValue<string>("Ollama:BaseUrlCompletion") ?? throw new InvalidDataException("Ollama embeddings url not specified");
+            var baseUrlEmbeddings = config.GetValue<string>("Ollama:BaseUrlEmbeddings") ?? throw new InvalidDataException("Ollama embeddings url not specified");
 
             builder.WithLoggerFactory(log_factory);
-            builder.WithOllamaTextCompletionService(model, baseUrl, http.CreateClient());
+            builder.WithOllamaTextCompletionService(model, baseUrlCompletion, http.CreateClient());
+            builder.WithOllamaTextEmbeddingGeneration(model, baseUrlEmbeddings, http.CreateClient());
 
             return builder.Build();
         });

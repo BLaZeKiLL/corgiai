@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.SemanticKernel.AI.Embeddings;
 
 namespace SemanticKernel.Ollama;
 
@@ -21,6 +22,22 @@ public static class OllamaKernelBuilderExtensions
         builder.WithAIService<ITextCompletion>(serviceId, loggerFactory =>
         {
             return new OllamaTextCompletion(modelId, baseUrl, httpClient, loggerFactory);
+        });
+
+        return builder;
+    }
+
+    public static KernelBuilder WithOllamaTextEmbeddingGeneration(
+        this KernelBuilder builder,
+        string modelId,
+        string baseUrl,
+        HttpClient httpClient,
+        string? serviceId = null
+    )
+    {
+        builder.WithAIService<ITextEmbeddingGeneration>(serviceId, loggerFactory =>
+        {
+            return new OllamaTextEmbeddingGeneration(modelId, baseUrl, httpClient, loggerFactory);
         });
 
         return builder;

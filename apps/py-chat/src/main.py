@@ -9,6 +9,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from dtos import (
+    EmbeddingsRequest,
     Question,
     Quiz
 )
@@ -87,11 +88,13 @@ def question_query(question: Question):
         "text": result["answer"]
     }
 
+
 @app.get("/question/{tag}")
 def get_question(tag: str):
     return {
         "question": get_random_question(neo_graph, tag)
     }
+
 
 @app.get("/quiz/{tag}")
 def quiz_question(tag: str):
@@ -109,4 +112,11 @@ def quiz_question(tag: str):
         "model": llm_name,
         "duration": end_time - start_time,
         "quiz": json.loads(json_string)
+    }
+
+
+@app.post("/api/embeddings")
+def generate_embeddings(request: EmbeddingsRequest):
+    return {
+        "embedding": embeddings.encode(request.prompt)
     }
