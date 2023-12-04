@@ -118,5 +118,5 @@ def quiz_question(tag: str):
 @app.post("/api/embeddings")
 def generate_embeddings(request: EmbeddingsRequest):
     return {
-        "embedding": embeddings.encode(request.prompt)
+        "embedding": embeddings.embed_documents([request.prompt])[0]
     }
