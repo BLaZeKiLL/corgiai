@@ -10,9 +10,9 @@ import type { TopicsResponse } from '$lib/models/response';
 
 
 export async function GET() {
-    console.log(`Quiz Net API : ${env.API_QUIZ_NET}`);
+    console.log(`Neo API : ${env.API_QUIZ}`);
 
-    const response = await axios.get(`${env.API_QUIZ_NET}/api/Neo/topics`, { proxy: proxy, params: { threshold: TOPIC_QUESTION_THRESHOLD } });
+    const response = await axios.get(`${env.API_QUIZ}/api/Neo/topics`, { proxy: proxy, params: { threshold: TOPIC_QUESTION_THRESHOLD } });
 
     const result: TopicsResponse = response.data;
 

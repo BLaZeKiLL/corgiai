@@ -11,9 +11,9 @@ import type { QuestionResponse } from '$lib/models/response';
 export async function GET({ url }) {
     const topic = url.searchParams.get('topic')!;
 
-    console.log(`Question API : ${env.API_QUIZ_NET}`);
+    console.log(`Question API : ${env.API_QUIZ}`);
 
-    const response = await axios.get(`${env.API_QUIZ_NET}/api/Prompt/question/${topic}`, { proxy: proxy });
+    const response = await axios.get(`${env.API_QUIZ}/api/Prompt/question/${topic}`, { proxy: proxy });
 
     const result: QuestionResponse = response.data;
 
