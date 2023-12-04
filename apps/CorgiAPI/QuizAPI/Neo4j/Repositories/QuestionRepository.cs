@@ -5,14 +5,14 @@ namespace QuizAPI.Neo4j.Repositories;
 
 public interface IQuestionRepository
 {
-    public Task<QuizQuestionRequest> GetRandomQuestionForTopic(string topic);
+    public Task<QuizQuestionNeo> GetRandomQuestionForTopic(string topic);
 }
 
 public class QuestionRepository(IDriver Driver) : IQuestionRepository
 {
     private readonly Random rng = new();
     
-    public async Task<QuizQuestionRequest> GetRandomQuestionForTopic(string topic)
+    public async Task<QuizQuestionNeo> GetRandomQuestionForTopic(string topic)
     {
         await using var session = Driver.AsyncSession();
 
@@ -45,7 +45,7 @@ public class QuestionRepository(IDriver Driver) : IQuestionRepository
                 """,
                 new { topic, offset = rng.Next(0, count)});
 
-            return await cursor.SingleAsync(record => new QuizQuestionRequest
+            return await cursor.SingleAsync(record => new QuizQuestionNeo
             {
                 Question = record["question"].As<string>(),
                 Answer = record["answer"].As<string>(),

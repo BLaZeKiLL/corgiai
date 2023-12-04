@@ -1,22 +1,27 @@
 namespace QuizAPI.Models;
 
-public class QuizQuestion
+public class Question
 {
-    public string Question { get; set; }
-    public string Answer { get; set; }
-    public string[] Options { get; set; }
+    public string Text { get; set; }
+    public Option[] Options { get; set; }
     public string Source { get; set; }
+    public string Topic { get; set; }
 }
 
-public class QuizQuestionRequest
+public class Option
+{
+    public string Text { get; set; }
+    public bool Correct { get; set; }
+}
+
+public class QuizQuestionNeo
 {
     public string Question { get; set; }
     public string Answer { get; set; }
-    
     public string Source { get; set; }
 }
 
 public class QuizQuestionResponse : LLMResponseBase
 {
-    public QuizQuestion Result { get; set; }
+    public Question Result { get; set; }
 }

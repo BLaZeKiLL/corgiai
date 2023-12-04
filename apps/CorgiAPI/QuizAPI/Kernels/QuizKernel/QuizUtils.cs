@@ -11,6 +11,7 @@ namespace QuizAPI.Kernels.QuizKernel;
 public class QuizUtils
 {
     private static readonly string[] ANSWER_PREFIXES = {"ANS1:", "ANS2:", "ANS3:"};
+    private static readonly Random rng = new();
 
     [SKFunction, Description("Renames the input variable to question")]
     public static SKContext RenameQuestionOutput(SKContext context)
@@ -32,20 +33,30 @@ public class QuizUtils
     public static SKContext QuizJsonBuilder(SKContext context)
     {
         var question = context.Variables["question"];
-        var answer = context.Variables["answer"];
-        var options = context.Variables["input"];
-        
-        
+        var answer = new Option {Text = context.Variables["answer"], Correct = true};
+        var wrong = context.Variables["input"]
+            .Split("\n")
+            .Where(x => ANSWER_PREFIXES.Any(x.StartsWith))
+            .Select(x => new Option { Text = x[6..], Correct = false })
+            .GetEnumerator();
 
-        var result = new QuizQuestion
+        var options = new Option[4];
+        var ans_index = rng.Next(0, 4);
+
+        for (var i = 0; i < 4; i++) // rng shuffle wasn't giving good results
         {
-            Question = question,
-            Answer = answer,
+            if (i == ans_index) options[i] = answer;
+            else
+            {
+                wrong.MoveNext();
+                options[i] = wrong.Current;
+            }
+        }
+        
+        var result = new Question
+        {
+            Text = question,
             Options = options
-                .Split("\n")
-                .Where(x => ANSWER_PREFIXES.Any(x.StartsWith))
-                .Select(x => x[6..])
-                .ToArray()
         };
 
         context.Variables["input"] = JsonSerializer.Serialize(result);

@@ -5,6 +5,8 @@
 
     const dispatch = createEventDispatcher();
 
+    export let disable_main: boolean = false;
+
     let mode: QuizMode = QuizMode.START;
 
     const get_main_btn_text = () => {
@@ -68,7 +70,7 @@
         </button>
     {/if}
     <span class="grow"></span>
-    <button on:click={main_btn_click} class="btn variant-filled-success">
+    <button on:click={main_btn_click} class="btn variant-filled-primary" disabled={disable_main}>
         {main_btn_text}
     </button>
 </div>

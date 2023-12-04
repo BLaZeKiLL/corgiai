@@ -35,7 +35,7 @@ public class PromptController(
         });
     }
 
-    [HttpPost("question:{topic}")]
+    [HttpGet("question/{topic}")]
     public async Task<ActionResult<QuizQuestionResponse>> QuestionPrompt([FromRoute] string topic)
     {
         var stopwatch = new Stopwatch();
@@ -47,6 +47,7 @@ public class PromptController(
         var result = await _QuizKernel.Question(question.Question, question.Answer);
 
         result.Source = question.Source;
+        result.Topic = topic;
         
         stopwatch.Stop();
 

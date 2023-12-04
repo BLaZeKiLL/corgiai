@@ -31,3 +31,15 @@ main {
 	/* Color Stops */
 	@apply from-primary-500 via-tertiary-500 to-secondary-500;
 }
+
+.stepper {
+	@apply h-full flex flex-col;
+}
+
+.step {
+	@apply h-full flex flex-col;
+}
+
+.stepper-max-height {
+    max-height: calc(100% - 43px);
+}

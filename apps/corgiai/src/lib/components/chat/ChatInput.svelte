@@ -21,6 +21,7 @@
 	<div class="w-full flex flex-row">
 		<select
 			bind:value={site}
+			name="site"
 			class="select w-auto left-border-radius text-center"
 		>
 			<option value="math">Math</option>
@@ -31,6 +32,7 @@
 		<span class="grow relative">
 			<input
 				bind:value={question}
+				name="prompt"
 				type="text"
 				placeholder="How can I help you?"
 				class="block w-full input right-border-radius"

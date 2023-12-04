@@ -7,9 +7,9 @@ declare global {
 		// interface PageData {}
 		// interface Platform {}
 	}
-}
 
-declare const MathJax;
+	declare const MathJax;
+}
 
 export {};
 

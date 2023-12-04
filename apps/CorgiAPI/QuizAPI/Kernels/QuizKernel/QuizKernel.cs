@@ -29,7 +29,7 @@ public class QuizKernel
         return result.GetValue<string>();
     }
 
-    public async Task<QuizQuestion> Question(string question, string answer)
+    public async Task<Question> Question(string question, string answer)
     {
         var context = new ContextVariables
         {
@@ -47,6 +47,6 @@ public class QuizKernel
             _Utils["QuizJsonBuilder"]
         );
 
-        return JsonSerializer.Deserialize<QuizQuestion>(result.GetValue<string>());
+        return JsonSerializer.Deserialize<Question>(result.GetValue<string>());
     }
 }
