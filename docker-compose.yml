@@ -78,7 +78,7 @@ services:
     image: ghcr.io/blazekill/corgiai-quiz-api:latest
     build:
       context: ./apps/CorgiAPI
-      dockerfile: ./apps/CorgiAPI/QuizAPI/Dockerfile
+      dockerfile: ./QuizAPI/Dockerfile
       additional_contexts:
         config: ./config
     networks:
