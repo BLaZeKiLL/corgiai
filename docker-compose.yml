@@ -38,7 +38,7 @@ services:
       - corgi-net
 
   py-loader:
-    image: corgiai.azurecr.io/corgiai/py-loader:latest
+    image: ghcr.io/blazekill/corgiai-py-loader:latest
     build:
       context: ./apps/py-loader
       additional_contexts:
@@ -57,7 +57,7 @@ services:
         condition: service_healthy
 
   py-chat:
-    image: corgiai.azurecr.io/corgiai/py-chat:latest
+    image: ghcr.io/blazekill/corgiai-py-chat:latest
     build:
       context: ./apps/py-chat
       additional_contexts:
@@ -75,7 +75,7 @@ services:
         condition: service_healthy
 
   quiz-api:
-    image: corgiai.azurecr.io/corgiai/quiz-api:latest
+    image: ghcr.io/blazekill/corgiai-quiz-api:latest
     build:
       context: ./apps/CorgiAPI
       dockerfile: ./apps/CorgiAPI/QuizAPI/Dockerfile
@@ -92,7 +92,7 @@ services:
         condition: service_healthy
   
   pull-model:
-    image: corgiai.azurecr.io/corgiai/pull-model:latest
+    image: ghcr.io/blazekill/corgiai-pull-model:latest
     build:
       context: ./apps/pull-model
     environment:
@@ -102,7 +102,7 @@ services:
       - corgi-net
 
   app:
-    image: corgiai.azurecr.io/corgiai/app:latest
+    image: ghcr.io/blazekill/corgiai-app:latest
     build:
       dockerfile: local.Dockerfile
       context: ./apps/corgiai
