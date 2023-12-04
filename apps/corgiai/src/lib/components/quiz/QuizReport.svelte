@@ -20,6 +20,7 @@
     <div class="h-full p-4 flex flex-col card border border-surface-500">
         <header class="flex flex-row place-content-center items-center gap-4">
             <ProgressRadial width="w-16" value={value} stroke={60} meter="stroke-primary-500" track="stroke-primary-500/30" strokeLinecap="butt"/>
+            <h2 class="h2">Quiz Report</h2>
             <span class="grow"></span>
             <div class="flex flex-col gap-2">
                 <h3 class="h3 text-right">Score : {score}</h3>
