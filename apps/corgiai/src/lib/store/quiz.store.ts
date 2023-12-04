@@ -6,7 +6,7 @@ import type { QuestionResponse } from '$lib/models/response';
 export interface QuizStoreState {
     totalQuestions: number;
     questions: Question[];
-    report: boolean[];
+    report: {ans: boolean, index: number}[];
     topics: string[];
 }
 
@@ -75,7 +75,7 @@ function createQuizStore() {
         const quiz: QuizStoreState = {
             topics: topics,
             totalQuestions: count,
-            report: [...Array(count).keys()].map(() => false),
+            report: [...Array(count).keys()].map(() => ({ans: false, index: -1})),
             questions: [...Array(count).keys()].map(() => ({
                 loaded: false,
                 id: Math.random().toString(36).substring(2, 9),
@@ -92,10 +92,10 @@ function createQuizStore() {
         set(quiz);
     }
 
-    const submitAnswer = (index: number, ans: boolean) => update(state => {
+    const submitAnswer = (index: number, ans: boolean, ans_index: number) => update(state => {
         const report = state.report;
 
-        report[index] = ans;
+        report[index] = {ans, index: ans_index};
 
         return {...state, report};
     });

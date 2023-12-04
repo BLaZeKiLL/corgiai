@@ -1,36 +1,9 @@
 <script lang="ts">
     import { topicsStore } from '$lib/store/topics.store';
 	import { BookOpenCheck, Database, MessagesSquare } from 'lucide-svelte';
+    import { variant_hash } from '$lib/utils/theme';
 
-    const class_gen = () => {
-        const CLASSES = [
-            'variant-filled-primary',
-            'variant-filled-secondary',
-            'variant-filled-tertiary',
-            'variant-filled-success',
-            'variant-filled-warning',
-            'variant-filled-error'
-        ];
-
-        let rng = [0,1,2,3,4,5];
-        let last = -1;
-
-        return () => {
-            let next_idx = Math.floor(Math.random() * rng.length)
-            let next = rng[next_idx];
-            let css = CLASSES[next];
-
-            rng.splice(next_idx, 1);
-
-            if (last != -1) rng.push(last);
-
-            last = next;
-
-            return css;
-        }
-    }
-
-    let rng_class = class_gen();
+    let variant_class = variant_hash();
 </script>
 
 <div class="w-full h-full max-w-7xl mx-auto px-4 py-32">
@@ -40,7 +13,7 @@
         <div class="grow flex flex-row gap-4 flex-wrap place-content-center items-center">
             {#each $topicsStore.topics as topic (topic.id)}
                 <span class="flex flex-row">
-                    <span class="badge {rng_class()} left-border-radius">
+                    <span class="badge {variant_class(topic.value)} left-border-radius">
                         {topic.value}
                     </span>
                     <span class="badge variant-filled-surface right-border-radius">
