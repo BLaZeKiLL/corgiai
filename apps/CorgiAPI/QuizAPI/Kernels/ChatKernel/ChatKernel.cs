@@ -112,7 +112,7 @@ public class ChatKernel(IKernel Kernel, CosmosClient cosmos, IConfiguration conf
             
             answers.Sort((x, y) => y.Score - x.Score);
 
-            question.Answers = answers[..2];
+            if (answers.Count > 2) question.Answers = answers[..2];
         }
         
         return output;
