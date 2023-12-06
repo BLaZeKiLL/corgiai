@@ -27,6 +27,7 @@ component = "embeddings"
 [component.embeddings]
 source = "target/wasm32-wasi/release/embeddings.wasm"
 allowed_outbound_hosts = []
+ai_models = ["all-minilm-l6-v2"]
 
 [component.embeddings.build]
 command = "cargo build --target wasm32-wasi --release"

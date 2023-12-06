@@ -9,6 +9,12 @@ Content-Type: application/json
 }
 ###
 
-###
+### Fermeyon Embeddin
+POST https://corgiai-llm-dllzzr9m.fermyon.app/api/embeddings
+Content-Type: application/json
 
+{
+  "model": "llama2:13b",
+  "prompt": "Proof that Statistical Mechanics is a model of Thermodynamics"
+}
 ###

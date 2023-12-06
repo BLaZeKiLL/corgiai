@@ -6,8 +6,6 @@ using Microsoft.SemanticKernel.AI.TextCompletion;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Microsoft.SemanticKernel.AI.ChatCompletion;
-
 
 namespace SemanticKernel.Ollama;
 
@@ -18,7 +16,7 @@ public class OllamaTextCompletion : ITextCompletion
 {
     public IReadOnlyDictionary<string, string> Attributes => _attributes;
 
-    private Dictionary<string, string> _attributes = new();
+    private readonly Dictionary<string, string> _attributes = new();
     private readonly HttpClient _httpClient;
     private readonly ILogger<OllamaTextCompletion> _logger;
 
@@ -49,6 +47,8 @@ public class OllamaTextCompletion : ITextCompletion
     /// <returns></returns>
     public async Task<IReadOnlyList<ITextResult>> GetCompletionsAsync(string text, AIRequestSettings? requestSettings = null, CancellationToken cancellationToken = default)
     {
+        // _logger.LogTrace("PROMPT: {text}", text);
+        
         var data = new
         {
             model = Attributes["model_id"],
@@ -123,27 +123,6 @@ public class OllamaTextCompletion : ITextCompletion
 
         response.EnsureSuccessStatusCode();
 
-        _logger.LogInformation($"Connected to Ollama at {Attributes["base_url"]} with model {Attributes["model_id"]}");
-    }
-}
-
-public class AB : IChatCompletion
-{
-    public IReadOnlyDictionary<string, string> Attributes { get; }
-    public ChatHistory CreateNewChat(string? instructions = null)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<IReadOnlyList<IChatResult>> GetChatCompletionsAsync(ChatHistory chat, AIRequestSettings? requestSettings = null,
-        CancellationToken cancellationToken = new CancellationToken())
-    {
-        throw new NotImplementedException();
-    }
-
-    public IAsyncEnumerable<IChatStreamingResult> GetStreamingChatCompletionsAsync(ChatHistory chat, AIRequestSettings? requestSettings = null,
-        CancellationToken cancellationToken = new CancellationToken())
-    {
-        throw new NotImplementedException();
+        _logger.LogInformation("Connected to Ollama at {url} with model {model}", Attributes["base_url"], Attributes["model_id"]);
     }
 }
