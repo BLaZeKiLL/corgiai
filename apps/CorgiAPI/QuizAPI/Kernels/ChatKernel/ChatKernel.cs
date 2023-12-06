@@ -70,7 +70,7 @@ public class ChatKernel(IKernel Kernel, CosmosClient cosmos, IConfiguration conf
         var answer = await chatCompletion.GenerateMessageAsync(chatHistory);
         
         // Add sources
-        var sources = string.Join("", questions.Select(x => $"\n \n- [{x.Title}]({x.Link})"));
+        var sources = string.Join("", questions.Select(x => $"\n- [{x.Title}]({x.Link})"));
         
         return answer + "\n \nSources:" + sources;
     }
