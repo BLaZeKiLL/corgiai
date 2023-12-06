@@ -70,9 +70,9 @@ public class ChatKernel(IKernel Kernel, CosmosClient cosmos, IConfiguration conf
         var answer = await chatCompletion.GenerateMessageAsync(chatHistory);
         
         // Add sources
-        var sources = string.Join("\n-", questions.Select(x => $"[{x.Title}]({x.Link})"));
+        var sources = string.Join("\n \n \t-", questions.Select(x => $"[{x.Title}]({x.Link})"));
         
-        return answer + "\nSources:" + sources;
+        return answer + "\n \nSources:" + sources;
     }
     
     private async Task<List<string>> GetEmbeddings(string site, string query)
