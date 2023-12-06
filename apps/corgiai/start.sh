@@ -7,4 +7,4 @@ echo CORGI APP STARTUP
 API_BASE_URL=http://$(/app/tailscale ip -4 codeblazeserver)
 
 # Here build referes to the ouput folder, it's not the build command
-API_PY_CHAT=$API_BASE_URL:8200 API_QUIZ=$API_BASE_URL:8300 TAILPROXY=true node -r dotenv/config build
+API_PY_CHAT=$API_BASE_URL:8300 API_QUIZ=$API_BASE_URL:8300 TAILPROXY=true node -r dotenv/config build
