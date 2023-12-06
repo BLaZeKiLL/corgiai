@@ -1,4 +1,5 @@
 ﻿using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.Memory.AzureCognitiveSearch;
 using SemanticKernel.Ollama;
 
 namespace QuizAPI.Kernels;
@@ -19,7 +20,12 @@ public static class SemanticKernelServiceExtensions
 
             builder.WithLoggerFactory(log_factory);
             builder.WithOllamaTextCompletionService(model, baseUrlCompletion, http.CreateClient());
+            builder.WithOllamaChatCompletionService(model, baseUrlCompletion, http.CreateClient());
             builder.WithOllamaTextEmbeddingGeneration(model, baseUrlEmbeddings, http.CreateClient());
+            builder.WithMemoryStorage(new AzureCognitiveSearchMemoryStore(
+                config.GetValue<string>("Search:Endpoint"),
+                config.GetValue<string>("Search:Key")
+            ));
 
             return builder.Build();
         });
@@ -30,6 +36,7 @@ public static class SemanticKernelServiceExtensions
     public static IServiceCollection AddQuizAPIKernels(this IServiceCollection services)
     {
         services.AddSingleton<QuizKernel.QuizKernel>();
+        services.AddScoped<ChatKernel.ChatKernel>();
 
         return services;
     }

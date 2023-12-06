@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using QuizAPI.Kernels.ChatKernel;
 using QuizAPI.Kernels.QuizKernel;
 using QuizAPI.Models;
 using QuizAPI.Neo4j.Repositories;
@@ -10,6 +11,7 @@ namespace QuizAPI.Controllers;
 [ApiController]
 public class PromptController(
     QuizKernel _QuizKernel, 
+    ChatKernel _ChatKernel,
     IQuestionRepository _QuestionRepository, 
     IConfiguration _Config
 ) : ControllerBase
@@ -54,6 +56,25 @@ public class PromptController(
         return Ok(new QuizQuestionResponse
         {
             Result = result,
+            Model = _Model,
+            Duration = stopwatch.Elapsed.TotalSeconds
+        });
+    }
+
+    [HttpPost("/chat")]
+    public async Task<ActionResult<TextResponse>> ChatPrompt([FromBody] ChatRequest chat)
+    {
+        var stopwatch = new Stopwatch();
+        
+        stopwatch.Start();
+        
+        var result = await _ChatKernel.UserChat(chat.Site, chat.Text);
+        
+        stopwatch.Stop();
+        
+        return Ok(new TextResponse
+        {
+            Text = result,
             Model = _Model,
             Duration = stopwatch.Elapsed.TotalSeconds
         });

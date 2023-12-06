@@ -51,7 +51,7 @@ public class OllamaTextEmbeddingGeneration : ITextEmbeddingGeneration
 
             var json = JsonSerializer.Deserialize<JsonNode>(await response.Content.ReadAsStringAsync(cancellationToken));
 
-            var embedding = new ReadOnlyMemory<float>(json!["embedding"].GetValue<float[]>());
+            var embedding = new ReadOnlyMemory<float>(json!["embedding"].AsArray().GetValues<float>().ToArray());
             
             result.Add(embedding);
         }

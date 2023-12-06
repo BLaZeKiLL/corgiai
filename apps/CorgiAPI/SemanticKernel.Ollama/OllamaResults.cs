@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.SemanticKernel.AI.ChatCompletion;
 
 namespace SemanticKernel.Ollama;
 
@@ -25,5 +26,14 @@ internal class OllamaTextStreamingResult(string result) : ITextStreamingResult
     public async IAsyncEnumerable<string> GetCompletionStreamingAsync(CancellationToken cancellationToken = default)
     {
         yield return result;
+    }
+}
+
+internal class OllamaChatResult(string result) : IChatResult
+{
+    public ModelResult ModelResult => new(result);
+    public Task<ChatMessage> GetChatMessageAsync(CancellationToken cancellationToken = new())
+    {
+        return Task.FromResult(new ChatMessage(AuthorRole.Assistant, result));
     }
 }

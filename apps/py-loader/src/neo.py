@@ -77,7 +77,7 @@ def insert_data(data: dict, embeddings: Embeddings, driver: Neo4jGraph) -> None:
     FOREACH (a IN q.answers |
         MERGE (question)<-[:ANSWERS]-(answer:Answer {id:a.answer_id})
         SET answer.is_accepted = a.is_accepted,
-            answer.score = a.score,
+            answer.score = a.score, 
             answer.creation_date = datetime({epochSeconds:a.creation_date}),
             answer.body = a.body_markdown,
             answer.embedding = a.embedding

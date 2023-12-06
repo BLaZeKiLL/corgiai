@@ -1,22 +1,17 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.SemanticKernel.AI;
-using Microsoft.SemanticKernel.AI.TextCompletion;
-
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.SemanticKernel.AI;
 using Microsoft.SemanticKernel.AI.ChatCompletion;
-
+using Microsoft.SemanticKernel.AI.TextCompletion;
 
 namespace SemanticKernel.Ollama;
 
-/// <summary>
-/// Allows semantic kernel to use models hosted using Ollama as AI Service
-/// </summary>
-public class OllamaTextCompletion : ITextCompletion
+public class OllamaChatCompletion : IChatCompletion, ITextCompletion
 {
-    public IReadOnlyDictionary<string, string> Attributes => _attributes;
+        public IReadOnlyDictionary<string, string> Attributes => _attributes;
 
     private Dictionary<string, string> _attributes = new();
     private readonly HttpClient _httpClient;
@@ -30,7 +25,7 @@ public class OllamaTextCompletion : ITextCompletion
     /// <param name="base_url">Ollama endpoint</param>
     /// <param name="httpClient">Http client used internally to query ollama api</param>
     /// <param name="loggerFactory">Logger</param>
-    public OllamaTextCompletion(string model_id, string base_url, HttpClient httpClient, ILoggerFactory loggerFactory)
+    public OllamaChatCompletion(string model_id, string base_url, HttpClient httpClient, ILoggerFactory loggerFactory)
     {
         _attributes.Add("model_id", model_id);
         _attributes.Add("base_url", base_url);
@@ -107,7 +102,44 @@ public class OllamaTextCompletion : ITextCompletion
         }
     }
 
+    public ChatHistory CreateNewChat(string? instructions = null)
+    {
+        var history = new ChatHistory();
 
+        if (!string.IsNullOrEmpty(instructions)) history.AddSystemMessage(instructions);
+        
+        return history;
+    }
+
+    public async Task<IReadOnlyList<IChatResult>> GetChatCompletionsAsync(ChatHistory chat, AIRequestSettings? requestSettings = null, CancellationToken cancellationToken = new())
+    {
+        var system = string.Join("\n", chat.Where(x => x.Role == AuthorRole.System).Select(x => x.Content));
+        var user = chat.Last(x => x.Role == AuthorRole.User);
+        
+        var data = new
+        {
+            model = Attributes["model_id"],
+            prompt = user.Content,
+            system,
+            stream = false,
+            options = requestSettings?.ExtensionData,
+        };
+
+        var response = await _httpClient.PostAsJsonAsync($"{Attributes["base_url"]}/api/generate", data, cancellationToken);
+
+        response.EnsureSuccessStatusCode();
+
+        var json = JsonSerializer.Deserialize<JsonNode>(await response.Content.ReadAsStringAsync(cancellationToken));
+
+        return new List<IChatResult> { new OllamaChatResult(json!["response"]!.GetValue<string>()) };
+    }
+
+    public IAsyncEnumerable<IChatStreamingResult> GetStreamingChatCompletionsAsync(ChatHistory chat, AIRequestSettings? requestSettings = null,
+        CancellationToken cancellationToken = new())
+    {
+        throw new NotImplementedException();
+    }
+    
     /// <summary>
     /// Pings ollama to see if the required model is running.
     /// </summary>
@@ -124,26 +156,5 @@ public class OllamaTextCompletion : ITextCompletion
         response.EnsureSuccessStatusCode();
 
         _logger.LogInformation($"Connected to Ollama at {Attributes["base_url"]} with model {Attributes["model_id"]}");
-    }
-}
-
-public class AB : IChatCompletion
-{
-    public IReadOnlyDictionary<string, string> Attributes { get; }
-    public ChatHistory CreateNewChat(string? instructions = null)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<IReadOnlyList<IChatResult>> GetChatCompletionsAsync(ChatHistory chat, AIRequestSettings? requestSettings = null,
-        CancellationToken cancellationToken = new CancellationToken())
-    {
-        throw new NotImplementedException();
-    }
-
-    public IAsyncEnumerable<IChatStreamingResult> GetStreamingChatCompletionsAsync(ChatHistory chat, AIRequestSettings? requestSettings = null,
-        CancellationToken cancellationToken = new CancellationToken())
-    {
-        throw new NotImplementedException();
     }
 }

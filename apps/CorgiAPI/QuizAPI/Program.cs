@@ -1,10 +1,11 @@
+using QuizAPI.Cosmos;
 using QuizAPI.Neo4j;
 using QuizAPI.Kernels;
 using QuizAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var config = builder.Configuration;
+var config = builder.Configuration.AddJsonFile("appsettings.Secret.json").Build();
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -13,6 +14,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCosmosDb(config);
 builder.Services.AddNeo4j(config);
 builder.Services.AddSemanticKernel(config);
 

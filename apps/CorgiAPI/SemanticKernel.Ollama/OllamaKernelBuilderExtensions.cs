@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.SemanticKernel.AI.ChatCompletion;
 using Microsoft.SemanticKernel.AI.Embeddings;
 
 namespace SemanticKernel.Ollama;
@@ -19,10 +20,20 @@ public static class OllamaKernelBuilderExtensions
         string? serviceId = null
     )
     {
-        builder.WithAIService<ITextCompletion>(serviceId, loggerFactory =>
-        {
-            return new OllamaTextCompletion(modelId, baseUrl, httpClient, loggerFactory);
-        });
+        builder.WithAIService<ITextCompletion>(serviceId, loggerFactory => new OllamaTextCompletion(modelId, baseUrl, httpClient, loggerFactory));
+
+        return builder;
+    }
+    
+    public static KernelBuilder WithOllamaChatCompletionService(
+        this KernelBuilder builder,
+        string modelId,
+        string baseUrl,
+        HttpClient httpClient,
+        string? serviceId = null
+    )
+    {
+        builder.WithAIService<IChatCompletion>(serviceId, loggerFactory => new OllamaChatCompletion(modelId, baseUrl, httpClient, loggerFactory));
 
         return builder;
     }
@@ -35,10 +46,7 @@ public static class OllamaKernelBuilderExtensions
         string? serviceId = null
     )
     {
-        builder.WithAIService<ITextEmbeddingGeneration>(serviceId, loggerFactory =>
-        {
-            return new OllamaTextEmbeddingGeneration(modelId, baseUrl, httpClient, loggerFactory);
-        });
+        builder.WithAIService<ITextEmbeddingGeneration>(serviceId, loggerFactory => new OllamaTextEmbeddingGeneration(modelId, baseUrl, httpClient, loggerFactory));
 
         return builder;
     }
