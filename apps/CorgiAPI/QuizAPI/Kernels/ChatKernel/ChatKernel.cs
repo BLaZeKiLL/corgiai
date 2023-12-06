@@ -29,6 +29,9 @@ public class ChatKernel(IKernel Kernel, CosmosClient cosmos, IConfiguration conf
     public async Task<string> UserChat(string site, string prompt)
     {
         var ids = await GetEmbeddings(site, prompt);
+
+        if (ids.Count == 0) return "Sorry I don't have any knowledge about your question.";
+        
         var questions = await GetQuestions(ids);
 
         return await GenerateCompletionAsync(prompt, site, questions);
