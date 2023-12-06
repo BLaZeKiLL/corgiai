@@ -61,7 +61,7 @@ public class PromptController(
         });
     }
 
-    [HttpPost("/chat")]
+    [HttpPost("chat")]
     public async Task<ActionResult<TextResponse>> ChatPrompt([FromBody] ChatRequest chat)
     {
         var stopwatch = new Stopwatch();

@@ -14,7 +14,7 @@ export async function POST({ request }) {
 
     console.log(`Chat API : ${env.API_PY_CHAT}`);
 
-    const response = await axios.post(`${env.API_PY_CHAT}/query`, body, { proxy: proxy });
+    const response = await axios.post(`${env.API_PY_CHAT}/api/Prompt/chat`, body, { proxy: proxy });
 
     const result: ChatResponse = response.data;
 
