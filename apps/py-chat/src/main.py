@@ -69,7 +69,7 @@ def read_root():
     return {"Hello": "Corgi Py Chat"}
 
 
-@app.post("/query")
+@app.post("/api/Prompt/chat")
 def question_query(question: Question):
     start_time = time.time()
 
