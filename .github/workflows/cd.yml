@@ -35,7 +35,7 @@ jobs:
         with:
           push: true
           context: ${{ matrix.build.path }}
-          tags: ${{ matrix.build.tag }}:${{ github.sha }}
+          tags: ${{ matrix.build.tag }}:${{ github.sha }},latest
           build-contexts: |
             config=./config
     
@@ -45,17 +45,12 @@ jobs:
     needs: [build]
 
     steps:
-      - name: Azure Login
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.CORGIAI_AZURE_CREDENTIALS }}
+      - name: Lowercase the repo name
+        run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
 
-      - name: Build and push container image to registry
-        uses: azure/container-apps-deploy-action@v2
+      - name: Deploy to azure
+        uses: azure/webapps-deploy@v2
         with: 
-          registryUrl: ghcr.io
-          registryUsername: ${{ github.actor }}
-          registryPassword: ${{ secrets.GITHUB_TOKEN }}
-          containerAppName: corgiai
-          resourceGroup: corgiai
-          imageToDeploy: ghcr.io/blazekill/corgiai/app:${{ github.sha }}
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          images: 'ghcr.io/${{ env.REPO }}:${{ github.sha }}'
