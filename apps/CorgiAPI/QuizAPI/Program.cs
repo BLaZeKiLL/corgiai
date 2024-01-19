@@ -1,4 +1,5 @@
-using QuizAPI.Cosmos;
+using NReco.Logging.File;
+
 using QuizAPI.Neo4j;
 using QuizAPI.Kernels;
 using QuizAPI.Services;
@@ -22,9 +23,9 @@ builder.Services.AddHttpClient();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddCosmosDb(config);
 builder.Services.AddNeo4j(config);
 builder.Services.AddSemanticKernel(config);
+builder.Services.AddSemanticMemory(config);
 
 builder.Services.AddQuizApiRepositories();
 builder.Services.AddQuizApiServices();
