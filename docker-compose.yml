@@ -19,7 +19,7 @@ services:
               capabilities: [ gpu ]
 
   neo:
-    image: neo4j:5.13
+    image: neo4j:5.15
     ports:
       - 7687:7687
       - 7474:7474

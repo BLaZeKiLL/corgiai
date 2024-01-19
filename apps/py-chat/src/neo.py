@@ -13,6 +13,7 @@ def create_vector_index(driver: Neo4jGraph, dimension: int) -> None:
         driver.query(index_query, {"dimension": dimension})
     except:  # Already exists
         pass
+    
     index_query = "CALL db.index.vector.createNodeIndex('top_answers', 'Answer', 'embedding', $dimension, 'cosine')"
     try:
         driver.query(index_query, {"dimension": dimension})
