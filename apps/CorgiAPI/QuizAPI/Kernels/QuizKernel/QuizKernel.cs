@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Microsoft.SemanticKernel;
 using QuizAPI.Models;
 
@@ -9,7 +8,6 @@ public class QuizKernel
     private readonly Kernel _Kernel;
     
     private readonly KernelPlugin _Skills;
-    //private readonly KernelPlugin _Utils;
 
     public QuizKernel(Kernel kernel)
     {
@@ -18,7 +16,6 @@ public class QuizKernel
         var path = Path.Combine(AppContext.BaseDirectory, "Kernels", "QuizKernel", "Skills");
 
         _Skills = _Kernel.ImportPluginFromPromptDirectory(path, "Skills");
-        //_Utils = _Kernel.ImportPluginFromObject(new QuizUtils(), "Utils");
     }
 
     public async Task<string> Summarize(string text)
@@ -33,22 +30,35 @@ public class QuizKernel
 
     public async Task<Question> Question(string question, string answer)
     {
-        // var context = new ContextVariables
-        // {
-        //     ["question_original"] = question,
-        //     ["answer_original"] = answer
-        // };
-        //
-        // var result = await _Kernel.RunAsync(
-        //     context,
-        //     _Skills["Question"],
-        //     _Utils["RenameQuestionOutput"],
-        //     _Skills["Answer"],
-        //     _Utils["RenameAnswerOutput"],
-        //     _Skills["Options"],
-        //     _Utils["QuizJsonBuilder"]
-        // );
+        var summarizedQuestion = await _Kernel.InvokeAsync<string>(
+            _Skills.Name,
+            "Question",
+            new KernelArguments
+            {
+                {"question_original", question}
+            }
+        );
 
-        return JsonSerializer.Deserialize<Question>("");
+        var summarizedAnswer = await _Kernel.InvokeAsync<string>(
+            _Skills.Name,
+            "Answer",
+            new KernelArguments
+            {
+                {"question", summarizedQuestion},
+                {"answer_original", answer}
+            }
+        );
+
+        var options = await _Kernel.InvokeAsync<string>(
+            _Skills.Name,
+            "Options",
+            new KernelArguments
+            {
+                {"question", summarizedQuestion},
+                {"answer", summarizedAnswer}
+            }
+        );
+
+        return QuizUtils.QuestionBuilder(summarizedQuestion, summarizedAnswer, options);
     }
 }
