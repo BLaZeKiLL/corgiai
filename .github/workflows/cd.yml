@@ -35,7 +35,7 @@ jobs:
         with:
           push: true
           context: ${{ matrix.build.path }}
-          tags: ${{ matrix.build.tag }}:${{ github.sha }},latest
+          tags: ${{ matrix.build.tag }}:${{ github.sha }},${{ matrix.build.tag }}:latest
           build-contexts: |
             config=./config
     
