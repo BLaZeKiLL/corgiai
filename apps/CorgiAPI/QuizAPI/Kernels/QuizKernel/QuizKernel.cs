@@ -1,52 +1,54 @@
 using System.Text.Json;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Orchestration;
 using QuizAPI.Models;
 
 namespace QuizAPI.Kernels.QuizKernel;
 
 public class QuizKernel
 {
-    private readonly IKernel _Kernel;
+    private readonly Kernel _Kernel;
     
-    private readonly IDictionary<string, ISKFunction> _Skills;
-    private readonly IDictionary<string, ISKFunction> _Utils;
+    private readonly KernelPlugin _Skills;
+    //private readonly KernelPlugin _Utils;
 
-    public QuizKernel(IKernel kernel)
+    public QuizKernel(Kernel kernel)
     {
         _Kernel = kernel;
 
-        var path = Path.Combine(AppContext.BaseDirectory, "Kernels", "QuizKernel");
+        var path = Path.Combine(AppContext.BaseDirectory, "Kernels", "QuizKernel", "Skills");
 
-        _Skills = _Kernel.ImportSemanticFunctionsFromDirectory(path, "Skills");
-        _Utils = _Kernel.ImportFunctions(new QuizUtils(), "Utils");
+        _Skills = _Kernel.ImportPluginFromPromptDirectory(path, "Skills");
+        //_Utils = _Kernel.ImportPluginFromObject(new QuizUtils(), "Utils");
     }
 
     public async Task<string> Summarize(string text)
     {
-        var result = await _Kernel.RunAsync(text, _Skills["Summarize"]);
+        var result = await _Kernel.InvokeAsync(_Skills.Name, "Summarize", new KernelArguments
+        {
+            {"input", text}
+        });
 
         return result.GetValue<string>();
     }
 
     public async Task<Question> Question(string question, string answer)
     {
-        var context = new ContextVariables
-        {
-            ["question_original"] = question,
-            ["answer_original"] = answer
-        };
+        // var context = new ContextVariables
+        // {
+        //     ["question_original"] = question,
+        //     ["answer_original"] = answer
+        // };
+        //
+        // var result = await _Kernel.RunAsync(
+        //     context,
+        //     _Skills["Question"],
+        //     _Utils["RenameQuestionOutput"],
+        //     _Skills["Answer"],
+        //     _Utils["RenameAnswerOutput"],
+        //     _Skills["Options"],
+        //     _Utils["QuizJsonBuilder"]
+        // );
 
-        var result = await _Kernel.RunAsync(
-            context,
-            _Skills["Question"],
-            _Utils["RenameQuestionOutput"],
-            _Skills["Answer"],
-            _Utils["RenameAnswerOutput"],
-            _Skills["Options"],
-            _Utils["QuizJsonBuilder"]
-        );
-
-        return JsonSerializer.Deserialize<Question>(result.GetValue<string>());
+        return JsonSerializer.Deserialize<Question>("");
     }
 }

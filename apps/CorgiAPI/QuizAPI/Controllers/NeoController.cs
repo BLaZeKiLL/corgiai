@@ -21,7 +21,7 @@ public class NeoController(
     }
 
     [HttpGet("question/{topic}")]
-    public async Task<ActionResult<QuizQuestionNeo>> GetRandomQuestionForTopic([FromRoute] string topic)
+    public async Task<ActionResult<QuizQuestion>> GetRandomQuestionForTopic([FromRoute] string topic)
     {
         return Ok(await QuestionRepository.GetRandomQuestionForTopic(topic));
     }

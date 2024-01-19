@@ -14,7 +14,7 @@ public class Option
     public bool Correct { get; set; }
 }
 
-public class QuizQuestionNeo
+public class QuizQuestion
 {
     public string Question { get; set; }
     public string Answer { get; set; }
