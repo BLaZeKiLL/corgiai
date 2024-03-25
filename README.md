@@ -1,5 +1,5 @@
 # Corgi AI
-### HackSC X by MLH Winner, Best Use of AI for Education
+### [HackSC X by MLH Winner](https://devpost.com/software/corgi-ai-community-retrieval-augmented-generation) (Best Use of AI for Education), [Microsoft Semantic Kernel Hackathon Winner](https://www.linkedin.com/posts/devashish-lal-096868176_semantic-kernel-v10-hackathon-finalists-activity-7141824995655057408-8vfB?utm_source=share&utm_medium=member_desktop)
 
 CorgiAI is a community-based hub powered by AI to help anyone learn and practice by interacting with ever-expanding shared knowledge.
 
